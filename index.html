@@ -307,6 +307,7 @@
       <div class="row" style="justify-content:center">
         <button class="btn small gray" id="btnTraceHear">🔊 글자 이름 듣기</button>
         <button class="btn small gray" id="btnTraceSound">🗣️ 글자 소리 듣기</button>
+        <button class="btn small" id="btnTraceDemo">▶️ 획순 보기</button>
       </div>
       <canvas id="traceCanvas" width="360" height="360"></canvas>
       <div class="trace-feedback" id="traceFeedback">회색 글자를 따라 그려 보세요!</div>
@@ -533,6 +534,75 @@ const LETTER_SOUND = {
   J:"juh",K:"kuh",L:"lll",M:"mmm",N:"nnn",O:"aw",P:"puh",Q:"kwuh",R:"rrr",
   S:"sss",T:"tuh",U:"uh",V:"vvv",W:"wuh",X:"ks",Y:"yuh",Z:"zzz"
 };
+
+/* ── 획순 데이터 (정규 좌표계) ──────────────────────
+   대문자: x 0~100(좌→우), y 0~100(윗선→기준선)
+   소문자: x 0~100, y 0(엑스하이트 윗선)~100(기준선), 어센더는 음수, 디센더는 100 초과 */
+const STROKES = {
+U:{
+  A:[[[10,100],[50,0]],[[50,0],[90,100]],[[25,65],[75,65]]],
+  B:[[[20,0],[20,100]],[[20,0],[60,0],[70,20],[60,45],[20,45]],[[20,45],[65,45],[78,72],[65,100],[20,100]]],
+  C:[[[80,15],[50,0],[20,20],[15,50],[20,80],[50,100],[80,85]]],
+  D:[[[20,0],[20,100]],[[20,0],[60,5],[78,50],[60,95],[20,100]]],
+  E:[[[20,0],[20,100]],[[20,0],[75,0]],[[20,50],[60,50]],[[20,100],[75,100]]],
+  F:[[[20,0],[20,100]],[[20,0],[75,0]],[[20,50],[60,50]]],
+  G:[[[80,15],[50,0],[20,20],[15,50],[20,80],[50,100],[80,85],[80,60],[55,60]]],
+  H:[[[20,0],[20,100]],[[80,0],[80,100]],[[20,50],[80,50]]],
+  I:[[[30,0],[70,0]],[[50,0],[50,100]],[[30,100],[70,100]]],
+  J:[[[70,0],[70,70],[60,95],[35,100],[15,85]]],
+  K:[[[20,0],[20,100]],[[80,0],[20,50]],[[20,50],[80,100]]],
+  L:[[[20,0],[20,100]],[[20,100],[75,100]]],
+  M:[[[15,100],[15,0]],[[15,0],[50,60]],[[50,60],[85,0]],[[85,0],[85,100]]],
+  N:[[[20,100],[20,0]],[[20,0],[80,100]],[[80,100],[80,0]]],
+  O:[[[50,0],[20,15],[10,50],[20,85],[50,100],[80,85],[90,50],[80,15],[50,0]]],
+  P:[[[20,0],[20,100]],[[20,0],[60,0],[75,25],[60,50],[20,50]]],
+  Q:[[[50,0],[20,15],[10,50],[20,85],[50,100],[80,85],[90,50],[80,15],[50,0]],[[60,70],[85,100]]],
+  R:[[[20,0],[20,100]],[[20,0],[60,0],[75,25],[60,50],[20,50]],[[45,50],[80,100]]],
+  S:[[[78,18],[55,0],[30,5],[18,22],[28,42],[55,50],[78,60],[85,80],[65,98],[35,100],[15,88]]],
+  T:[[[15,0],[85,0]],[[50,0],[50,100]]],
+  U:[[[20,0],[20,60],[30,90],[50,100],[70,90],[80,60],[80,0]]],
+  V:[[[15,0],[50,100]],[[50,100],[85,0]]],
+  W:[[[10,0],[30,100]],[[30,100],[50,40]],[[50,40],[70,100]],[[70,100],[90,0]]],
+  X:[[[15,0],[85,100]],[[85,0],[15,100]]],
+  Y:[[[15,0],[50,50]],[[85,0],[50,50]],[[50,50],[50,100]]],
+  Z:[[[15,0],[85,0]],[[85,0],[15,100]],[[15,100],[85,100]]]
+},
+L:{
+  a:[[[75,20],[55,8],[30,12],[16,35],[18,65],[35,90],[58,95],[75,80],[75,45]],[[75,20],[75,100]]],
+  b:[[[20,-45],[20,100]],[[20,40],[45,32],[65,45],[70,68],[55,90],[30,92],[20,80]]],
+  c:[[[78,25],[55,10],[30,15],[15,40],[15,65],[30,90],[55,95],[75,80]]],
+  d:[[[78,-45],[78,100]],[[78,40],[55,30],[35,38],[25,60],[28,82],[48,93],[70,88],[78,68]]],
+  e:[[[15,55],[50,50],[78,55],[75,80],[55,95],[30,90],[15,68],[20,45],[38,32],[60,32]]],
+  f:[[[65,-40],[48,-45],[35,-38],[30,-15],[30,90]],[[12,30],[52,30]]],
+  g:[[[75,35],[55,25],[35,28],[20,45],[20,70],[35,90],[58,90],[72,75]],[[72,35],[72,110],[60,135],[35,138],[15,128]]],
+  h:[[[18,-45],[18,100]],[[18,45],[35,28],[55,28],[68,42],[68,100]]],
+  i:[[[50,-38],[50,-30]],[[50,25],[50,100]]],
+  j:[[[55,-38],[55,-30]],[[55,25],[55,110],[45,132],[25,135],[12,122]]],
+  k:[[[18,-45],[18,100]],[[62,28],[18,58]],[[18,58],[65,100]]],
+  l:[[[50,-45],[50,100]]],
+  m:[[[12,25],[12,100]],[[12,45],[25,28],[38,28],[46,42],[46,100]],[[46,45],[59,28],[72,28],[80,42],[80,100]]],
+  n:[[[18,25],[18,100]],[[18,45],[35,28],[55,28],[68,42],[68,100]]],
+  o:[[[50,25],[28,32],[18,50],[18,75],[30,92],[50,98],[72,92],[82,75],[82,50],[72,32],[50,25]]],
+  p:[[[20,25],[20,140]],[[20,40],[45,30],[65,42],[68,68],[52,90],[28,88],[20,72]]],
+  q:[[[78,40],[55,28],[33,38],[25,60],[28,82],[48,93],[70,88],[78,68]],[[78,25],[78,140]]],
+  r:[[[22,25],[22,100]],[[22,42],[35,28],[55,28],[62,32]]],
+  s:[[[72,32],[52,22],[30,25],[20,38],[28,50],[50,58],[70,68],[78,82],[60,96],[35,98],[18,88]]],
+  t:[[[35,-30],[35,90]],[[12,28],[55,28]],[[35,85],[45,95],[58,92]]],
+  u:[[[18,28],[18,72],[32,94],[55,94],[70,75],[70,28]],[[70,28],[70,100]]],
+  v:[[[18,28],[48,100]],[[48,100],[78,28]]],
+  w:[[[10,28],[28,100]],[[28,100],[48,50]],[[48,50],[65,100]],[[65,100],[88,28]]],
+  x:[[[18,28],[78,100]],[[78,28],[18,100]]],
+  y:[[[18,28],[50,75]],[[78,28],[35,135]]],
+  z:[[[18,30],[75,30]],[[75,30],[18,100]],[[18,100],[75,100]]]
+}
+};
+function strokesFor(letter, isUpper){ return STROKES[isUpper?"U":"L"][isUpper?letter:letter.toLowerCase()]; }
+function mapStrokePt([x,y], isUpper){
+  return isUpper
+    ? {x:100+x*1.6, y:65+y*1.9}
+    : {x:100+x*1.6, y:130+y*1.25};
+}
+
 let traceCase="upper", traceLetter="A";
 const tCanvas=document.getElementById("traceCanvas"), tCtx=tCanvas.getContext("2d");
 let inkCanvas=document.createElement("canvas"); inkCanvas.width=360; inkCanvas.height=360;
@@ -590,6 +660,7 @@ function drawGuide(){
 }
 function loadLetter(){
   inkCtx.clearRect(0,0,360,360); hasInk=false;
+  demoToken++; demoPlaying=false;
   drawGuide();
   document.getElementById("traceFeedback").textContent="회색 글자를 따라 그려 보세요!";
   speak(traceLetter, {rate:0.9});
@@ -599,7 +670,107 @@ function canvasPos(e){
   const x=(e.clientX-r.left)*(360/r.width), y=(e.clientY-r.top)*(360/r.height);
   return {x,y};
 }
+
+/* ── 획순 안내 화살표 애니메이션 ── */
+let demoPlaying=false, demoToken=0;
+function pathLen(pts){
+  let d=0; for(let i=1;i<pts.length;i++){ d+=Math.hypot(pts[i].x-pts[i-1].x, pts[i].y-pts[i-1].y); }
+  return d;
+}
+function pointAtT(pts, t){
+  const total=pathLen(pts); const target=total*t;
+  let acc=0;
+  for(let i=1;i<pts.length;i++){
+    const seg=Math.hypot(pts[i].x-pts[i-1].x, pts[i].y-pts[i-1].y);
+    if(acc+seg>=target){
+      const local=seg===0?0:(target-acc)/seg;
+      return {
+        x:pts[i-1].x+(pts[i].x-pts[i-1].x)*local,
+        y:pts[i-1].y+(pts[i].y-pts[i-1].y)*local,
+        angle:Math.atan2(pts[i].y-pts[i-1].y, pts[i].x-pts[i-1].x)
+      };
+    }
+    acc+=seg;
+  }
+  const last=pts[pts.length-1], prev=pts[pts.length-2]||last;
+  return {x:last.x, y:last.y, angle:Math.atan2(last.y-prev.y, last.x-prev.x)};
+}
+function drawArrowhead(ctx, pt, color){
+  const a=pt.angle, len=16;
+  ctx.save();
+  ctx.translate(pt.x, pt.y); ctx.rotate(a);
+  ctx.beginPath();
+  ctx.moveTo(0,0); ctx.lineTo(-len,-len*0.55); ctx.lineTo(-len,len*0.55); ctx.closePath();
+  ctx.fillStyle=color; ctx.fill();
+  ctx.restore();
+}
+function playStrokeDemo(){
+  if(demoPlaying) return;
+  const raw=strokesFor(traceLetter, traceCase==="upper");
+  if(!raw) return;
+  const isUpper=traceCase==="upper";
+  const strokes=raw.map(s=>s.map(p=>mapStrokePt(p,isUpper)));
+  demoPlaying=true;
+  const myToken=++demoToken;
+  document.getElementById("traceFeedback").textContent="✏️ 화살표를 눈으로 따라가 보세요!";
+  let strokeIdx=0;
+  const doneStrokes=[];
+  function drawFrame(t){
+    if(myToken!==demoToken) return;
+    drawGuide();
+    doneStrokes.forEach(s=>{
+      tCtx.strokeStyle="#7f5af0"; tCtx.lineWidth=7; tCtx.lineCap="round"; tCtx.lineJoin="round";
+      tCtx.beginPath(); tCtx.moveTo(s[0].x,s[0].y); s.forEach(p=>tCtx.lineTo(p.x,p.y)); tCtx.stroke();
+    });
+    const pts=strokes[strokeIdx];
+    tCtx.strokeStyle="#f582ae"; tCtx.lineWidth=7; tCtx.lineCap="round"; tCtx.lineJoin="round";
+    tCtx.beginPath(); tCtx.moveTo(pts[0].x,pts[0].y);
+    const total=pathLen(pts), target=total*t;
+    let acc=0, cur=pts[0];
+    for(let i=1;i<pts.length;i++){
+      const seg=Math.hypot(pts[i].x-cur.x, pts[i].y-cur.y);
+      if(acc+seg>=target){ break; }
+      tCtx.lineTo(pts[i].x,pts[i].y); acc+=seg; cur=pts[i];
+    }
+    const tip=pointAtT(pts,t);
+    tCtx.lineTo(tip.x,tip.y); tCtx.stroke();
+    drawArrowhead(tCtx, tip, "#f582ae");
+    /* 번호 배지 */
+    const start=pts[0];
+    tCtx.beginPath(); tCtx.arc(start.x-14,start.y-14,12,0,7);
+    tCtx.fillStyle="#f582ae"; tCtx.fill();
+    tCtx.fillStyle="#fff"; tCtx.font="800 14px sans-serif"; tCtx.textAlign="center"; tCtx.textBaseline="middle";
+    tCtx.fillText(String(strokeIdx+1), start.x-14, start.y-13);
+  }
+  function runStroke(){
+    if(myToken!==demoToken) return;
+    const pts=strokes[strokeIdx];
+    const dur=550+pathLen(pts)*1.1;
+    const t0=performance.now();
+    function frame(now){
+      if(myToken!==demoToken) return;
+      const t=Math.min(1,(now-t0)/dur);
+      drawFrame(t);
+      if(t<1) requestAnimationFrame(frame);
+      else{
+        doneStrokes.push(pts);
+        strokeIdx++;
+        if(strokeIdx<strokes.length) setTimeout(runStroke,250);
+        else{
+          demoPlaying=false;
+          document.getElementById("traceFeedback").textContent="이제 직접 따라 그려 보세요!";
+          setTimeout(()=>{ if(myToken===demoToken) drawGuide(); },500);
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  runStroke();
+}
+document.getElementById("btnTraceDemo").onclick=playStrokeDemo;
+
 tCanvas.addEventListener("pointerdown",e=>{
+  if(demoPlaying) return;
   e.preventDefault(); tCanvas.setPointerCapture(e.pointerId);
   drawing=true; lastPt=canvasPos(e); hasInk=true;
 });
@@ -827,6 +998,11 @@ const PHONEME = {
   r:["rrr","르","c"], s:["sss","스","c"], t:["tuh","트","c"], v:["vvv","브","c"],
   w:["wuh","우","c"], x:["ks","크스","c"], y:["yuh","이","c"], z:["zzz","즈","c"],
   qu:["kwuh","쿠","c"],
+  bl:["buhl","블","c"], cl:["kuhl","클","c"], fl:["fuhl","플","c"], gl:["guhl","글","c"],
+  pl:["puhl","플","c"], sl:["suhl","슬","c"], br:["bur","브르","c"], cr:["kur","크르","c"],
+  dr:["dur","드르","c"], fr:["fur","프르","c"], gr:["gur","그르","c"], tr:["tur","트르","c"],
+  st:["stuh","스트","c"], sp:["spuh","스프","c"], sn:["snuh","스느","c"], sw:["swuh","스우","c"],
+  sk:["skuh","스크","c"], sm:["smuh","스므","c"],
   a:["ah","애","v"], e:["eh","에","v"], i:["ih","이","v"], o:["aw","아","v"], u:["uh","어","v"],
   sh:["shh","쉬","d"], ch:["chuh","취","d"], th:["thuh","쓰","d"], ng:["ung","응","d"], ck:["kuh","크","d"],
   ai:["ay","에이","t"], ay:["ay","에이","t"], ee:["ee","이-","t"], ea:["ee","이-","t"],
@@ -836,34 +1012,49 @@ const PHONEME = {
 const TYPE_COLOR={c:"var(--c-consonant)", v:"var(--c-vowel)", d:"var(--c-digraph)", t:"var(--c-team)", m:"var(--c-magic)", chunk:null};
 const KR_WORD = {
   cat:"캣", bat:"뱃", hat:"햇", map:"맵", pan:"팬", bag:"백", jam:"잼", sad:"새드",
+  can:"캔", fan:"팬", rat:"랫", van:"밴", cap:"캡", lap:"랩",
   bed:"베드", pen:"펜", hen:"헨", net:"넷", leg:"레그", wet:"웻", red:"레드", ten:"텐",
+  jet:"젯", vet:"벳", beg:"베그", let:"렛", men:"멘", pet:"펫",
   pig:"피그", sit:"씻", lip:"립", win:"윈", big:"빅", fin:"핀", hit:"힛", six:"씩스",
+  dig:"디그", kid:"키드", lid:"리드", zip:"집", pin:"핀", fit:"핏",
   dog:"도그", hot:"핫", top:"탑", box:"박스", mop:"맙", log:"로그", pot:"팟", fox:"팍스",
+  jog:"조그", not:"낫", cot:"캇", rod:"랏", pop:"팝", cop:"캅",
   sun:"썬", cup:"컵", bug:"버그", run:"런", mud:"머드", hug:"허그", bus:"버스", cut:"컷",
+  bun:"번", fun:"펀", gum:"검", hut:"헛", jug:"저그", nut:"넛",
   ship:"쉽", shop:"샵", fish:"피쉬", chat:"챗", chin:"친", ring:"링", king:"킹", bath:"배쓰", thin:"씬",
+  shed:"쉐드", shut:"셧", chop:"찹", sing:"씽", that:"댓", wish:"위쉬", path:"패쓰",
   cake:"케이크", name:"네임", bike:"바이크", ride:"라이드", home:"호움", rose:"로우즈", cube:"큐브", tune:"튠",
-  rain:"레인", tail:"테일", boat:"보웃", coat:"코웃", seed:"씨-드", feet:"피-트", team:"티-임", moon:"무-운"
+  gate:"게이트", late:"레이트", five:"파이브", like:"라이크", hope:"호웁", note:"노웃",
+  rain:"레인", tail:"테일", boat:"보웃", coat:"코웃", seed:"씨-드", feet:"피-트", team:"티-임", moon:"무-운",
+  pain:"페인", mail:"메일", goat:"고웃", soap:"소웁", read:"리-드", pool:"푸-울",
+  flag:"플래그", stop:"스탑", crab:"크랩", frog:"프로그", black:"블랙", clap:"클랩",
+  drum:"드럼", trip:"트립", swim:"스윔", snap:"스냅", skip:"스킵", plan:"플랜",
+  car:"카", jar:"자", star:"스타", corn:"콘", fort:"포트", short:"쇼트", her:"헐", term:"텀", herd:"허드"
 };
 
 /* 단어 표기법: 유닛을 "-"로 구분.
    매직e: 모음 뒤 "*", 끝의 조용한 e는 "e!"  예) c-a*-k-e! */
 const BLEND_LEVELS=[
   {id:"a", icon:"🍎", title:"단모음 a", sample:"cat · map · bag",
-    words:["c-a-t","b-a-t","h-a-t","m-a-p","p-a-n","b-a-g","j-a-m","s-a-d"]},
+    words:["c-a-t","b-a-t","h-a-t","m-a-p","p-a-n","b-a-g","j-a-m","s-a-d","c-a-n","f-a-n","r-a-t","v-a-n","c-a-p","l-a-p"]},
   {id:"e", icon:"🥚", title:"단모음 e", sample:"bed · pen · net",
-    words:["b-e-d","p-e-n","h-e-n","n-e-t","l-e-g","w-e-t","r-e-d","t-e-n"]},
+    words:["b-e-d","p-e-n","h-e-n","n-e-t","l-e-g","w-e-t","r-e-d","t-e-n","j-e-t","v-e-t","b-e-g","l-e-t","m-e-n","p-e-t"]},
   {id:"i", icon:"🐷", title:"단모음 i", sample:"pig · sit · win",
-    words:["p-i-g","s-i-t","l-i-p","w-i-n","b-i-g","f-i-n","h-i-t","s-i-x"]},
+    words:["p-i-g","s-i-t","l-i-p","w-i-n","b-i-g","f-i-n","h-i-t","s-i-x","d-i-g","k-i-d","l-i-d","z-i-p","p-i-n","f-i-t"]},
   {id:"o", icon:"🐶", title:"단모음 o", sample:"dog · hot · box",
-    words:["d-o-g","h-o-t","t-o-p","b-o-x","m-o-p","l-o-g","p-o-t","f-o-x"]},
+    words:["d-o-g","h-o-t","t-o-p","b-o-x","m-o-p","l-o-g","p-o-t","f-o-x","j-o-g","n-o-t","c-o-t","r-o-d","p-o-p","c-o-p"]},
   {id:"u", icon:"☀️", title:"단모음 u", sample:"sun · cup · bug",
-    words:["s-u-n","c-u-p","b-u-g","r-u-n","m-u-d","h-u-g","b-u-s","c-u-t"]},
+    words:["s-u-n","c-u-p","b-u-g","r-u-n","m-u-d","h-u-g","b-u-s","c-u-t","b-u-n","f-u-n","g-u-m","h-u-t","j-u-g","n-u-t"]},
   {id:"dg", icon:"🚢", title:"짝소리 sh·ch·th·ng", sample:"ship · chat · ring",
-    words:["sh-i-p","sh-o-p","f-i-sh","ch-a-t","ch-i-n","th-i-n","b-a-th","r-i-ng","k-i-ng"]},
+    words:["sh-i-p","sh-o-p","f-i-sh","ch-a-t","ch-i-n","th-i-n","b-a-th","r-i-ng","k-i-ng","sh-e-d","sh-u-t","ch-o-p","s-i-ng","w-i-sh","p-a-th"]},
+  {id:"cb", icon:"🧱", title:"자음 블렌드 bl·cr·st·tr", sample:"flag · crab · stop",
+    words:["fl-a-g","st-o-p","cr-a-b","fr-o-g","bl-a-ck","cl-a-p","dr-u-m","tr-i-p","sw-i-m","sn-a-p","sk-i-p","pl-a-n"]},
   {id:"me", icon:"🎂", title:"매직 e", sample:"cake · bike · home",
-    words:["c-a*-k-e!","n-a*-m-e!","b-i*-k-e!","r-i*-d-e!","h-o*-m-e!","r-o*-s-e!","c-u*-b-e!","t-u*-n-e!"]},
+    words:["c-a*-k-e!","n-a*-m-e!","b-i*-k-e!","r-i*-d-e!","h-o*-m-e!","r-o*-s-e!","c-u*-b-e!","t-u*-n-e!","g-a*-t-e!","l-a*-t-e!","f-i*-v-e!","l-i*-k-e!","h-o*-p-e!","n-o*-t-e!"]},
   {id:"vt", icon:"🌧️", title:"모음 친구 ai·ee·oa·oo", sample:"rain · boat · moon",
-    words:["r-ai-n","t-ai-l","b-oa-t","c-oa-t","s-ee-d","f-ee-t","t-ea-m","m-oo-n"]}
+    words:["r-ai-n","t-ai-l","b-oa-t","c-oa-t","s-ee-d","f-ee-t","t-ea-m","m-oo-n","p-ai-n","m-ai-l","g-oa-t","s-oa-p","r-ea-d","p-oo-l"]},
+  {id:"rc", icon:"🚗", title:"r 소리 친구 ar·or·er", sample:"car · corn · her",
+    words:["c-ar","j-ar","st-ar","c-or-n","f-or-t","sh-or-t","h-er","t-er-m","h-er-d"]}
 ];
 
 /* 청크 단어: [청크표기, TTS 근사발음, 한글 힌트] */
@@ -877,7 +1068,13 @@ const CHUNK_LEVELS=[
       {w:"window", kr:"윈도우", units:[["win","win","윈"],["dow","dough","도우"]]},
       {w:"teacher", kr:"티-처", units:[["tea","tee","티-"],["cher","cher","처"]]},
       {w:"morning", kr:"모-닝", units:[["mor","more","모-"],["ning","ning","닝"]]},
-      {w:"garden", kr:"가-든", units:[["gar","gar","가-"],["den","den","든"]]}
+      {w:"garden", kr:"가-든", units:[["gar","gar","가-"],["den","den","든"]]},
+      {w:"napkin", kr:"냅킨", units:[["nap","nap","냅"],["kin","kin","킨"]]},
+      {w:"pumpkin", kr:"펌프킨", units:[["pump","pump","펌프"],["kin","kin","킨"]]},
+      {w:"cactus", kr:"캑터스", units:[["cac","cack","캑"],["tus","tuss","터스"]]},
+      {w:"magnet", kr:"매그넷", units:[["mag","mag","매그"],["net","net","넷"]]},
+      {w:"candy", kr:"캔디", units:[["can","can","캔"],["dy","dee","디"]]},
+      {w:"happy", kr:"해피", units:[["hap","hap","햅"],["py","pee","피"]]}
     ]},
   {id:"c3", icon:"🎯", title:"세 조각 단어", sample:"com·pu·ter",
     words:[
@@ -888,7 +1085,13 @@ const CHUNK_LEVELS=[
       {w:"banana", kr:"버내너", units:[["ba","buh","버"],["na","nan","내"],["na","nuh","너"]]},
       {w:"hospital", kr:"하스피틀", units:[["hos","hoss","하스"],["pi","pih","피"],["tal","tull","틀"]]},
       {w:"understand", kr:"언더스탠드", units:[["un","un","언"],["der","der","더"],["stand","stand","스탠드"]]},
-      {w:"holiday", kr:"할러데이", units:[["ho","hah","할"],["li","lih","러"],["day","day","데이"]]}
+      {w:"holiday", kr:"할러데이", units:[["ho","hah","할"],["li","lih","러"],["day","day","데이"]]},
+      {w:"elephant", kr:"엘러펀트", units:[["el","el","엘"],["e","uh","러"],["phant","fant","펀트"]]},
+      {w:"dinosaur", kr:"다이너소어", units:[["di","dye","다이"],["no","nuh","너"],["saur","sore","소어"]]},
+      {w:"potato", kr:"퍼테이토우", units:[["po","puh","퍼"],["ta","tay","테이"],["to","toe","토우"]]},
+      {w:"tomorrow", kr:"터모로우", units:[["to","tuh","터"],["mor","mor","모"],["row","row","로우"]]},
+      {w:"umbrella", kr:"엄브렐러", units:[["um","um","엄"],["brel","brel","브렐"],["la","luh","러"]]},
+      {w:"animal", kr:"애니멀", units:[["an","an","애"],["i","ih","니"],["mal","mull","멀"]]}
     ]},
   {id:"cs", icon:"🔚", title:"자주 나오는 끝소리", sample:"-tion · -ture",
     words:[
@@ -899,7 +1102,11 @@ const CHUNK_LEVELS=[
       {w:"future", kr:"퓨-처", units:[["fu","few","퓨-"],["ture","cher","처"]]},
       {w:"nature", kr:"네이처", units:[["na","nay","네이"],["ture","cher","처"]]},
       {w:"nation", kr:"네이션", units:[["na","nay","네이"],["tion","shun","션"]]},
-      {w:"lotion", kr:"로우션", units:[["lo","low","로우"],["tion","shun","션"]]}
+      {w:"lotion", kr:"로우션", units:[["lo","low","로우"],["tion","shun","션"]]},
+      {w:"careful", kr:"케어펄", units:[["care","care","케어"],["ful","full","펄"]]},
+      {w:"famous", kr:"페이머스", units:[["fa","fay","페이"],["mous","muss","머스"]]},
+      {w:"dangerous", kr:"데인저러스", units:[["dan","dane","데인"],["ger","jer","저"],["ous","russ","러스"]]},
+      {w:"decision", kr:"디시전", units:[["de","dih","디"],["ci","sih","시"],["sion","zhun","전"]]}
     ]},
   {id:"cl", icon:"🏔️", title:"긴 단어 도전!", sample:"in·for·ma·tion",
     words:[
@@ -908,7 +1115,11 @@ const CHUNK_LEVELS=[
       {w:"national", kr:"내셔늘", units:[["na","nah","내"],["tion","shun","셔"],["al","null","늘"]]},
       {w:"impossible", kr:"임파서블", units:[["im","im","임"],["pos","poss","파"],["si","sih","서"],["ble","bull","블"]]},
       {w:"interesting", kr:"인터레스팅", units:[["in","in","인"],["te","tuh","터"],["res","ress","레스"],["ting","ting","팅"]]},
-      {w:"dictionary", kr:"딕셔너리", units:[["dic","dick","딕"],["tio","shuh","셔"],["na","neh","너"],["ry","ree","리"]]}
+      {w:"dictionary", kr:"딕셔너리", units:[["dic","dick","딕"],["tio","shuh","셔"],["na","neh","너"],["ry","ree","리"]]},
+      {w:"communication", kr:"커뮤니케이션", units:[["com","kuh","커"],["mu","mew","뮤"],["ni","nih","니"],["ca","kay","케이"],["tion","shun","션"]]},
+      {w:"university", kr:"유니버서티", units:[["u","yoo","유"],["ni","nih","니"],["ver","ver","버"],["si","suh","서"],["ty","tee","티"]]},
+      {w:"imagination", kr:"이매저네이션", units:[["i","ih","이"],["ma","mad","매"],["gi","juh","저"],["na","nay","네이"],["tion","shun","션"]]},
+      {w:"responsibility", kr:"리스판서빌러티", units:[["re","rih","리"],["spon","spahn","스판"],["si","suh","서"],["bil","bill","빌"],["i","ih","러"],["ty","tee","티"]]}
     ]}
 ];
 
