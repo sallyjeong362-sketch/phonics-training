@@ -530,9 +530,9 @@ refreshBadges();
 const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 /* 글자 소리(파닉스) 발음 근사 */
 const LETTER_SOUND = {
-  A:"ah",B:"buh",C:"kuh",D:"duh",E:"eh",F:"fuh",G:"guh",H:"huh",I:"ih",
-  J:"juh",K:"kuh",L:"luh",M:"muh",N:"nuh",O:"aw",P:"puh",Q:"kwaw",R:"ruh",
-  S:"suh",T:"tuh",U:"uh",V:"vuh",W:"wuh",X:"ks",Y:"yuh",Z:"zuh"
+  A:"ah",B:"buh",C:"k'uh",D:"duh",E:"eh",F:"fuh",G:"guh",H:"huh",I:"it",
+  J:"juh",K:"k'uh",L:"luh",M:"muh",N:"nuh",O:"aw",P:"puh",Q:"kwaw",R:"ruh",
+  S:"suh",T:"tuh",U:"uh",V:"vuh",W:"won",X:"ax",Y:"yum",Z:"zi"
 };
 
 /* ── 획순 데이터 (정규 좌표계) ──────────────────────
@@ -1027,18 +1027,18 @@ document.getElementById("btnGameToBlend").onclick=()=>{ renderLevelList("blend")
    ═══════════════════════════════════════════════ */
 /* 발음 근사: [TTS로 읽어줄 소리, 한글 힌트, 유형] */
 const PHONEME = {
-  b:["buh","브","c"], c:["kuh","크","c"], d:["duh","드","c"], f:["fuh","프","c"],
-  g:["guh","그","c"], h:["huh","흐","c"], j:["juh","즈","c"], k:["kuh","크","c"],
+  b:["buh","브","c"], c:["k'uh","크","c"], d:["duh","드","c"], f:["fuh","프","c"],
+  g:["guh","그","c"], h:["huh","흐","c"], j:["juh","즈","c"], k:["k'uh","크","c"],
   l:["luh","을","c"], m:["muh","음","c"], n:["nuh","은","c"], p:["puh","프","c"],
   r:["ruh","르","c"], s:["suh","스","c"], t:["tuh","트","c"], v:["vuh","브","c"],
-  w:["wuh","우","c"], x:["ks","크스","c"], y:["yuh","이","c"], z:["zuh","즈","c"],
+  w:["won","워","c"], x:["ax","크스","c"], y:["yum","여","c"], z:["zi","지","c"],
   qu:["kwaw","쿼","c"],
   bl:["buhl","블","c"], cl:["kuhl","클","c"], fl:["fuhl","플","c"], gl:["guhl","글","c"],
   pl:["puhl","플","c"], sl:["suhl","슬","c"], br:["bur","브르","c"], cr:["kur","크르","c"],
   dr:["dur","드르","c"], fr:["fur","프르","c"], gr:["gur","그르","c"], tr:["tur","트르","c"],
   st:["stuh","스트","c"], sp:["spuh","스프","c"], sn:["snuh","스느","c"], sw:["swuh","스우","c"],
   sk:["skuh","스크","c"], sm:["smuh","스므","c"],
-  a:["ah","애","v"], e:["eh","에","v"], i:["ih","이","v"], o:["aw","아","v"], u:["uh","어","v"],
+  a:["ah","애","v"], e:["eh","에","v"], i:["it","이","v"], o:["aw","아","v"], u:["uh","어","v"],
   sh:["shh","쉬","d"], ch:["chuh","취","d"], th:["thuh","쓰","d"], ng:["ung","응","d"], ck:["kuh","크","d"],
   ai:["ay","에이","t"], ay:["ay","에이","t"], ee:["ee","이-","t"], ea:["ee","이-","t"],
   oa:["oh","오우","t"], oo:["oo","우-","t"], ar:["ar","아-르","t"], or:["or","오-르","t"], er:["er","어-르","t"],
