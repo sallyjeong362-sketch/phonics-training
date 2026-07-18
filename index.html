@@ -1126,7 +1126,7 @@ const CHUNK_LEVELS=[
 /* ═══════════════════════════════════════════════
    블렌딩/청크 공용 플레이 화면
    ═══════════════════════════════════════════════ */
-let play={mode:"blend", level:null, idx:0, units:[], word:"", kr:"", dragging:false, lastHit:-1, dragged:new Set()};
+let play={mode:"blend", level:null, idx:0, units:[], word:"", kr:"", dragging:false, dragged:new Set()};
 
 function parseBlendWord(code){
   const segs=code.split("-");
@@ -1212,7 +1212,7 @@ function currentWordData(){
 function loadWord(){
   const data=currentWordData();
   play.units=data.units; play.word=data.word; play.kr=data.kr;
-  play.dragged=new Set(); play.lastHit=-1;
+  play.dragged=new Set();
   const area=document.getElementById("wordArea");
   area.innerHTML='<canvas id="slideTrail"></canvas>';
   const isChunk=play.mode==="chunk";
@@ -1314,18 +1314,18 @@ const wordArea=document.getElementById("wordArea");
 wordArea.addEventListener("pointerdown",e=>{
   e.preventDefault();
   wordArea.setPointerCapture(e.pointerId);
-  play.dragging=true; play.dragged=new Set(); play.lastHit=-1;
+  play.dragging=true; play.dragged=new Set();
   clearTrail();
   const i=unitAt(e.clientX,e.clientY);
-  if(i>=0){ play.lastHit=i; play.dragged.add(i); pulseUnit(i); }
+  if(i>=0 && !play.dragged.has(i)){ play.dragged.add(i); pulseUnit(i); }
   drawTrailTo(e.clientX,e.clientY);
 });
 wordArea.addEventListener("pointermove",e=>{
   if(!play.dragging) return;
   drawTrailTo(e.clientX,e.clientY);
   const i=unitAt(e.clientX,e.clientY);
-  if(i>=0 && i!==play.lastHit){
-    play.lastHit=i; play.dragged.add(i);
+  if(i>=0 && !play.dragged.has(i)){
+    play.dragged.add(i);
     pulseUnit(i);
   }
 });
