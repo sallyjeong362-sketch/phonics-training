@@ -446,12 +446,16 @@ function pickVoice(){
 pickVoice();
 if (typeof speechSynthesis!=="undefined") speechSynthesis.onvoiceschanged = pickVoice;
 
-function speak(text, {rate=0.85, pitch=1.05, interrupt=true}={}){
+function speak(text, {rate=0.85, pitch=1.05, interrupt=true, clipMs=null}={}){
   if (typeof speechSynthesis==="undefined") return;
   if (interrupt) speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   if (enVoice) u.voice = enVoice;
   u.lang = "en-US"; u.rate = rate; u.pitch = pitch;
+  if(clipMs){
+    /* 단어 전체가 아니라 시작 음소만 들리도록, 말이 시작된 뒤 짧게 끊는다 */
+    u.onstart=()=>{ setTimeout(()=>speechSynthesis.cancel(), clipMs); };
+  }
   speechSynthesis.speak(u);
 }
 
@@ -534,6 +538,8 @@ const LETTER_SOUND = {
   J:"juh",K:"cut",L:"luh",M:"muh",N:"nuh",O:"aw",P:"puh",Q:"kwaw",R:"ruh",
   S:"suh",T:"tuh",U:"uh",V:"vuh",W:"won",X:"ax",Y:"young",Z:"zi"
 };
+/* 단어 전체가 아니라 시작 음소만 들려줘야 하는 글자(전체 재생 ms) */
+const LETTER_SOUND_CLIP = { C:170, K:170, Y:140 };
 
 /* ── 획순 데이터 (정규 좌표계) ──────────────────────
    대문자: x 0~100(좌→우), y 0~100(윗선→기준선)
@@ -821,7 +827,7 @@ tCanvas.addEventListener("pointermove",e=>{
 document.getElementById("btnTraceClear").onclick=()=>{ inkCtx.clearRect(0,0,360,360); hasInk=false; drawGuide();
   document.getElementById("traceFeedback").textContent="다시 그려 보세요!"; };
 document.getElementById("btnTraceHear").onclick=()=>speak(traceLetter,{rate:0.9});
-document.getElementById("btnTraceSound").onclick=()=>speak(LETTER_SOUND[traceLetter],{rate:0.8});
+document.getElementById("btnTraceSound").onclick=()=>speak(LETTER_SOUND[traceLetter],{rate:0.8, clipMs:LETTER_SOUND_CLIP[traceLetter]});
 document.getElementById("btnTraceNext").onclick=()=>{
   const i=ALPHA.indexOf(traceLetter);
   traceLetter=ALPHA[(i+1)%26];
@@ -1027,11 +1033,11 @@ document.getElementById("btnGameToBlend").onclick=()=>{ renderLevelList("blend")
    ═══════════════════════════════════════════════ */
 /* 발음 근사: [TTS로 읽어줄 소리, 한글 힌트, 유형] */
 const PHONEME = {
-  b:["buh","브","c"], c:["cut","크","c"], d:["duh","드","c"], f:["fuh","프","c"],
-  g:["guh","그","c"], h:["huh","흐","c"], j:["juh","즈","c"], k:["cut","크","c"],
+  b:["buh","브","c"], c:["cut","크","c",170], d:["duh","드","c"], f:["fuh","프","c"],
+  g:["guh","그","c"], h:["huh","흐","c"], j:["juh","즈","c"], k:["cut","크","c",170],
   l:["luh","을","c"], m:["muh","음","c"], n:["nuh","은","c"], p:["puh","프","c"],
   r:["ruh","르","c"], s:["suh","스","c"], t:["tuh","트","c"], v:["vuh","브","c"],
-  w:["won","워","c"], x:["ax","크스","c"], y:["young","여","c"], z:["zi","지","c"],
+  w:["won","워","c"], x:["ax","크스","c"], y:["young","여","c",140], z:["zi","지","c"],
   qu:["kwaw","쿼","c"],
   bl:["buhl","블","c"], cl:["kuhl","클","c"], fl:["fuhl","플","c"], gl:["guhl","글","c"],
   pl:["puhl","플","c"], sl:["suhl","슬","c"], br:["bur","브르","c"], cr:["kur","크르","c"],
@@ -1180,7 +1186,7 @@ function parseBlendWord(code){
       word+=g;
     }else{
       const ph=PHONEME[seg]||["","",("aeiou".includes(seg)?"v":"c")];
-      units.push({g:seg, s:ph[0], kr:ph[1], type:ph[2]});
+      units.push({g:seg, s:ph[0], kr:ph[1], type:ph[2], clip:ph[3]});
       word+=seg;
     }
   });
@@ -1313,7 +1319,7 @@ function pulseUnit(i, playSound=true){
   const u=play.units[i];
   el.classList.add("active");
   setTimeout(()=>el.classList.remove("active"), 420);
-  if(playSound && !u.silent && u.s) speak(u.s,{rate:0.75});
+  if(playSound && !u.silent && u.s) speak(u.s,{rate:0.75, clipMs:u.clip});
 }
 function drawTrailTo(x,y){
   const area=document.getElementById("wordArea");
