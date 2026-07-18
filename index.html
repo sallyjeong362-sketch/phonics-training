@@ -597,10 +597,42 @@ L:{
 }
 };
 function strokesFor(letter, isUpper){ return STROKES[isUpper?"U":"L"][isUpper?letter:letter.toLowerCase()]; }
-function mapStrokePt([x,y], isUpper){
-  return isUpper
-    ? {x:100+x*1.6, y:65+y*1.9}
-    : {x:100+x*1.6, y:130+y*1.25};
+
+/* 가이드 글자와 채점 마스크가 공유하는 기준선/폰트 — 실제 기기에 설치된 폰트가
+   달라도(예: iOS엔 Comic Sans MS가 없음) 항상 정확히 같은 위치에 그려지도록
+   렌더링 직전에 실측 글자 크기를 구해서 좌표를 맞춘다. */
+const GUIDE_FONT="800 250px 'Comic Sans MS','Arial Rounded MT Bold',sans-serif";
+const BASELINE_Y=255;
+function letterBox(ch, isUpper){
+  tCtx.font=GUIDE_FONT; tCtx.textAlign="center"; tCtx.textBaseline="alphabetic";
+  const refAscent=tCtx.measureText(isUpper?"H":"x").actualBoundingBoxAscent;
+  const top=BASELINE_Y-refAscent;
+  const m=tCtx.measureText(ch);
+  return { top, left:180-m.actualBoundingBoxLeft, right:180+m.actualBoundingBoxRight };
+}
+function mapStrokePt([x,y], box){
+  return { x: box.left+(x/100)*(box.right-box.left), y: box.top+(y/100)*(BASELINE_Y-box.top) };
+}
+
+/* Catmull-Rom 스플라인으로 점을 촘촘히 보간 — 손글씨 곡선(C, O, S 등)이
+   꺾여 보이지 않고 매끄럽게 이어지도록 한다. */
+function catmullRom(p0,p1,p2,p3,t){
+  const t2=t*t, t3=t2*t;
+  return {
+    x:0.5*((2*p1.x)+(-p0.x+p2.x)*t+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+3*p1.x-3*p2.x+p3.x)*t3),
+    y:0.5*((2*p1.y)+(-p0.y+p2.y)*t+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+3*p1.y-3*p2.y+p3.y)*t3)
+  };
+}
+function densifyPath(pts, samplesPerSeg=10){
+  if(pts.length<3) return pts.slice();
+  const ext=[pts[0], ...pts, pts[pts.length-1]];
+  const out=[];
+  for(let i=0;i<pts.length-1;i++){
+    const [p0,p1,p2,p3]=[ext[i],ext[i+1],ext[i+2],ext[i+3]];
+    for(let s=0;s<samplesPerSeg;s++) out.push(catmullRom(p0,p1,p2,p3,s/samplesPerSeg));
+  }
+  out.push(pts[pts.length-1]);
+  return out;
 }
 
 let traceCase="upper", traceLetter="A";
@@ -640,20 +672,22 @@ document.querySelectorAll("#scr-trace .tab").forEach(t=>t.onclick=()=>{
 
 function drawGuide(){
   tCtx.clearRect(0,0,360,360);
+  const box=letterBox(displayLetter(), traceCase==="upper");
   /* 기준선 */
   tCtx.strokeStyle="#e8f0f7"; tCtx.lineWidth=2;
-  [70,180,290].forEach(y=>{
-    tCtx.beginPath(); tCtx.setLineDash(y===180?[8,8]:[]);
+  const midY=(box.top+BASELINE_Y)/2;
+  [box.top,midY,BASELINE_Y].forEach(y=>{
+    tCtx.beginPath(); tCtx.setLineDash(y===midY?[8,8]:[]);
     tCtx.moveTo(20,y); tCtx.lineTo(340,y); tCtx.stroke();
   });
   tCtx.setLineDash([]);
   /* 안내 글자 */
-  tCtx.font="800 250px 'Comic Sans MS','Arial Rounded MT Bold',sans-serif";
-  tCtx.textAlign="center"; tCtx.textBaseline="middle";
+  tCtx.font=GUIDE_FONT;
+  tCtx.textAlign="center"; tCtx.textBaseline="alphabetic";
   tCtx.fillStyle="#dde8f2";
-  tCtx.fillText(displayLetter(),180,190);
+  tCtx.fillText(displayLetter(),180,BASELINE_Y);
   tCtx.strokeStyle="#b9cfe2"; tCtx.lineWidth=2; tCtx.setLineDash([7,6]);
-  tCtx.strokeText(displayLetter(),180,190);
+  tCtx.strokeText(displayLetter(),180,BASELINE_Y);
   tCtx.setLineDash([]);
   /* 사용자가 그린 잉크 */
   tCtx.drawImage(inkCanvas,0,0);
@@ -709,7 +743,8 @@ function playStrokeDemo(){
   const raw=strokesFor(traceLetter, traceCase==="upper");
   if(!raw) return;
   const isUpper=traceCase==="upper";
-  const strokes=raw.map(s=>s.map(p=>mapStrokePt(p,isUpper)));
+  const box=letterBox(displayLetter(), isUpper);
+  const strokes=raw.map(s=>densifyPath(s.map(p=>mapStrokePt(p,box))));
   demoPlaying=true;
   const myToken=++demoToken;
   document.getElementById("traceFeedback").textContent="✏️ 화살표를 눈으로 따라가 보세요!";
@@ -798,12 +833,12 @@ function scoreTrace(){
   if(!hasInk){ return null; }
   const mask=document.createElement("canvas"); mask.width=360; mask.height=360;
   const mc=mask.getContext("2d");
-  mc.font="800 250px 'Comic Sans MS','Arial Rounded MT Bold',sans-serif";
-  mc.textAlign="center"; mc.textBaseline="middle";
-  mc.fillStyle="#000"; mc.fillText(displayLetter(),180,190);
+  mc.font=GUIDE_FONT;
+  mc.textAlign="center"; mc.textBaseline="alphabetic";
+  mc.fillStyle="#000"; mc.fillText(displayLetter(),180,BASELINE_Y);
   const maskD=mc.getImageData(0,0,360,360).data;
   /* 확장 마스크(테두리 허용치) */
-  mc.lineWidth=34; mc.strokeStyle="#000"; mc.strokeText(displayLetter(),180,190);
+  mc.lineWidth=34; mc.strokeStyle="#000"; mc.strokeText(displayLetter(),180,BASELINE_Y);
   const dilD=mc.getImageData(0,0,360,360).data;
   /* 잉크 확장본: 커버 판정용 */
   const fat=document.createElement("canvas"); fat.width=360; fat.height=360;
