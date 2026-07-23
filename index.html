@@ -611,10 +611,17 @@ const GUIDE_FONT="800 250px 'Comic Sans MS','Arial Rounded MT Bold',sans-serif";
 const BASELINE_Y=255;
 function letterBox(ch, isUpper){
   tCtx.font=GUIDE_FONT; tCtx.textAlign="center"; tCtx.textBaseline="alphabetic";
-  const refAscent=tCtx.measureText(isUpper?"H":"x").actualBoundingBoxAscent;
+  /* actualBoundingBox* 는 일부 구형 브라우저·인앱 웹뷰에서 지원하지 않아
+     undefined가 될 수 있으므로, 그런 경우엔 항상 지원되는 width 기반
+     근사값으로 대체해 앱이 멈추지 않도록 한다. */
+  const refM=tCtx.measureText(isUpper?"H":"x");
+  const refAscent=Number.isFinite(refM.actualBoundingBoxAscent) ? refM.actualBoundingBoxAscent : 250*(isUpper?0.72:0.5);
   const top=BASELINE_Y-refAscent;
   const m=tCtx.measureText(ch);
-  return { top, left:180-m.actualBoundingBoxLeft, right:180+m.actualBoundingBoxRight };
+  const halfW=m.width/2;
+  const left=Number.isFinite(m.actualBoundingBoxLeft) ? 180-m.actualBoundingBoxLeft : 180-halfW;
+  const right=Number.isFinite(m.actualBoundingBoxRight) ? 180+m.actualBoundingBoxRight : 180+halfW;
+  return { top, left, right };
 }
 function mapStrokePt([x,y], box){
   return { x: box.left+(x/100)*(box.right-box.left), y: box.top+(y/100)*(BASELINE_Y-box.top) };
@@ -1408,8 +1415,8 @@ document.getElementById("btnNextWord").onclick=()=>{
 };
 document.getElementById("btnBackToLevels").onclick=()=>{ renderLevelList(play.mode); show(play.mode); };
 
-/* 첫 화면 준비 */
-initTraceScreen();
+/* 첫 화면 준비 — 예기치 못한 오류가 나도 앱 전체가 멈추지 않도록 방어 */
+try{ initTraceScreen(); }catch(e){ console.error("initTraceScreen failed:", e); }
 </script>
 </body>
 </html>
