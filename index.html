@@ -438,6 +438,7 @@ function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
 /* ── 음성 (Web Speech API) ── */
 let enVoice = null;
 function pickVoice(){
+  if (typeof speechSynthesis === "undefined") return;
   const vs = speechSynthesis.getVoices();
   enVoice = vs.find(v=>/en[-_]US/i.test(v.lang) && /female|samantha|zira|jenny|aria/i.test(v.name))
          || vs.find(v=>/en[-_]US/i.test(v.lang))
