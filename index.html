@@ -1758,6 +1758,7 @@ function loadWord(){
   const data=currentWordData();
   play.units=data.units; play.word=data.word; play.kr=data.kr;
   play.dragged=new Set();
+  _soundBusyUntil=0;
   const area=document.getElementById("wordArea");
   area.innerHTML='<canvas id="slideTrail"></canvas>';
   const isChunk=play.mode==="chunk";
@@ -1816,6 +1817,20 @@ function unitAt(x,y){
   }
   return -1;
 }
+/* 드래그가 빠르면 앞 음소 소리가 채 들리기도 전에 다음 소리가 끼어들어
+   잘려버려서 "합치기"가 또렷하게 들리지 않는 문제가 있었다(특히 sit·pig처럼
+   글자 수가 적어 드래그 거리가 짧은 단어). 각 음소 소리에 최소 재생 시간을
+   보장해, 빠르게 드래그해도 음소가 서로 끊어 먹지 않고 순서대로 또렷하게
+   들리게 한다. */
+let _soundBusyUntil = 0;
+const MIN_SOUND_GAP = 230;
+function queuePhonemeSound(fn){
+  const now = performance.now();
+  const wait = Math.max(0, _soundBusyUntil - now);
+  _soundBusyUntil = Math.max(_soundBusyUntil, now) + MIN_SOUND_GAP;
+  if(wait<=0) fn(); else setTimeout(fn, wait);
+}
+
 function pulseUnit(i, playSound=true){
   const area=document.getElementById("wordArea");
   const el=area.querySelector(`.unit[data-i="${i}"]`);
@@ -1824,10 +1839,12 @@ function pulseUnit(i, playSound=true){
   el.classList.add("active");
   setTimeout(()=>el.classList.remove("active"), 420);
   if(playSound && !u.silent && u.s){
-    const isPlainLetter = !u.magic && u.g && u.g.length===1;
-    if(!(isPlainLetter && playLetterSound(u.g))){
-      speak(u.s,{rate:0.75, clipMs:u.clip});
-    }
+    queuePhonemeSound(()=>{
+      const isPlainLetter = !u.magic && u.g && u.g.length===1;
+      if(!(isPlainLetter && playLetterSound(u.g))){
+        speak(u.s,{rate:0.75, clipMs:u.clip});
+      }
+    });
   }
 }
 function drawTrailTo(x,y){
