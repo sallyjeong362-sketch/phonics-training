@@ -6,7 +6,7 @@
 <title>소리쑥쑥 파닉스</title>
 <style>
   :root{
-    --bg:#fef6e4; --card:#ffffff; --ink:#172c66;
+    --bg:#fef6e4; --card:#fffbff; --ink:#172c66;
     --pink:#f582ae; --blue:#8bd3dd; --deep:#001858;
     --yellow:#f3d2c1; --green:#2cb67d; --red:#ef4565;
     --purple:#7f5af0; --orange:#ff8906;
@@ -14,19 +14,36 @@
     --c-team:#2cb67d; --c-magic:#ff8906; --c-silent:#94a1b2;
     --radius:20px;
     --shadow:0 4px 14px rgba(0,24,88,.12);
+    /* 파스텔 보라~핑크 테마 */
+    --grad-top:#c7b8fb; --grad-mid:#ddd3fd; --grad-bot:#fbd2ec;
+    --accent-purple:#8b5cf6; --accent-pink:#f472b6; --accent-gold:#ffc24b;
+    --sprout:#7fd9a8; --sprout-dark:#4fae7c;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; padding:0;}
   body{
     font-family:'Apple SD Gothic Neo','Malgun Gothic','Comic Sans MS',sans-serif;
-    background:var(--bg); color:var(--ink); min-height:100vh;
+    color:var(--ink); min-height:100vh;
+    background:linear-gradient(180deg, var(--grad-top) 0%, var(--grad-mid) 40%, var(--grad-bot) 100%);
+    background-attachment:fixed;
+    position:relative;
   }
   button{font-family:inherit; cursor:pointer; border:none;}
+
+  /* ── 배경 장식(반짝이·버블) ──────────── */
+  .bg-deco{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;}
+  .bg-deco .bubble{
+    position:absolute; border-radius:50%; background:rgba(255,255,255,.35);
+    filter:blur(2px);
+  }
+  .bg-deco .spark{position:absolute; font-size:18px; opacity:.55; filter:drop-shadow(0 0 2px rgba(255,255,255,.6));}
+  header, main{position:relative; z-index:1;}
 
   /* ── 헤더 ─────────────────────────── */
   header{
     display:flex; align-items:center; gap:10px;
-    padding:12px 16px; background:var(--card); box-shadow:var(--shadow);
+    padding:12px 16px; background:rgba(255,255,255,.72); backdrop-filter:blur(8px);
+    box-shadow:var(--shadow);
     position:sticky; top:0; z-index:50;
   }
   header .home-btn{
@@ -46,17 +63,56 @@
 
   /* ── 홈 ───────────────────────────── */
   .hello{
-    background:linear-gradient(135deg,#8bd3dd,#f582ae); color:#fff;
-    border-radius:var(--radius); padding:20px 22px; margin-bottom:18px;
-    box-shadow:var(--shadow);
+    background:linear-gradient(135deg,var(--accent-purple),var(--accent-pink)); color:#fff;
+    border-radius:var(--radius); padding:20px 22px; margin-bottom:14px;
+    box-shadow:var(--shadow); position:relative; overflow:hidden;
+    display:flex; align-items:center; gap:14px;
   }
+  .hello .hello-text{flex:1; min-width:0;}
   .hello h2{margin:0 0 6px; font-size:24px;}
   .hello p{margin:0; opacity:.95; font-size:15px; line-height:1.5;}
+  .hello .mascot{flex-shrink:0; transform:scale(.8);}
+
+  /* ── 주간 출석 도장 ───────────────── */
+  .week-stamp{
+    display:flex; justify-content:space-between; gap:4px;
+    background:var(--card); border-radius:16px; padding:10px 8px;
+    box-shadow:var(--shadow); margin-bottom:18px;
+  }
+  .stamp-day{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:4px 0; border-radius:10px;
+  }
+  .stamp-day.today{background:#f3eaff;}
+  .stamp-label{font-size:11px; font-weight:800; color:#8a94a6;}
+  .stamp-dot{
+    width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:14px; background:#eef0f6; border:2px solid #e3e6f0;
+  }
+  .stamp-day.got .stamp-dot{background:linear-gradient(135deg,var(--sprout),var(--sprout-dark)); border-color:var(--sprout-dark); box-shadow:0 0 0 3px rgba(127,217,168,.25);}
+  .stamp-day.today .stamp-label{color:var(--accent-purple);}
+
+  /* ── 모험 지도 홈 메뉴 ──────────────── */
+  .menu-path{position:relative; display:flex; flex-direction:column; gap:22px; max-width:520px; margin:0 auto; padding:6px 0;}
+  .menu-path::before{
+    content:""; position:absolute; left:50%; top:10px; bottom:10px; width:0;
+    border-left:4px dashed rgba(139,92,246,.35); transform:translateX(-1px); z-index:0;
+  }
+  .menu-path .menu-card{margin-left:0;}
+  .menu-path .menu-card:nth-child(odd){transform:translateX(-14px);}
+  .menu-path .menu-card:nth-child(even){transform:translateX(14px);}
+  .menu-path .menu-card:hover{transform:translateY(-3px);}
+  .menu-path .menu-card:nth-child(odd):hover{transform:translateX(-14px) translateY(-3px);}
+  .menu-path .menu-card:nth-child(even):hover{transform:translateX(14px) translateY(-3px);}
+  @media (max-width:480px){
+    .menu-path .menu-card, .menu-path .menu-card:nth-child(odd), .menu-path .menu-card:nth-child(even){transform:none;}
+    .menu-path::before{display:none;}
+  }
   .menu-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px;}
   .menu-card{
     background:var(--card); border-radius:var(--radius); padding:20px;
     box-shadow:var(--shadow); text-align:left; border:3px solid transparent;
-    transition:transform .15s, border-color .15s; position:relative;
+    transition:transform .15s, border-color .15s; position:relative; z-index:1;
   }
   .menu-card:hover{transform:translateY(-3px); border-color:var(--blue);}
   .menu-card .emoji{font-size:40px;}
@@ -70,6 +126,66 @@
   .step-tag{display:inline-block; background:var(--deep); color:#fff; font-size:11px;
     border-radius:999px; padding:2px 9px; margin-bottom:4px; font-weight:700;}
 
+  /* ── 마스코트 "쑥쑥이" ──────────────── */
+  .mascot{position:relative; width:72px; height:92px; animation:mascotBob 2.6s ease-in-out infinite;}
+  .mascot.sm{width:48px; height:62px;}
+  .mascot.lg{width:104px; height:134px;}
+  @keyframes mascotBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+  .mascot .m-body{
+    position:absolute; left:50%; bottom:0; width:70%; height:62%; transform:translateX(-50%);
+    background:linear-gradient(160deg,#ffd1e8,#f582ae);
+    border-radius:50% 50% 46% 46%/58% 58% 42% 42%;
+    box-shadow:inset 0 -6px 10px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.12);
+  }
+  .mascot .m-face{position:absolute; left:50%; top:28%; width:62%; transform:translateX(-50%); text-align:center;}
+  .mascot .m-eye{display:inline-block; width:9%; aspect-ratio:1; background:#2a1b33; border-radius:50%; margin:0 9%;}
+  .mascot .m-mouth{
+    display:block; width:28%; aspect-ratio:2/1; margin:5px auto 0;
+    border:0 solid transparent; border-bottom:3px solid #2a1b33;
+    border-radius:0 0 50% 50%;
+  }
+  .mascot .m-cheek{position:absolute; top:46%; width:14%; aspect-ratio:1; background:#ff9ec7; border-radius:50%; opacity:.75;}
+  .mascot .m-cheek.l{left:6%;} .mascot .m-cheek.r{right:6%;}
+  .mascot .m-leaf{
+    position:absolute; top:-10%; width:22%; height:34%; background:linear-gradient(160deg,var(--sprout),var(--sprout-dark));
+    border-radius:0% 100% 0% 100%/0% 100% 0% 100%;
+  }
+  .mascot .m-leaf.l{left:30%; transform:rotate(-18deg);}
+  .mascot .m-leaf.r{right:30%; transform:rotate(18deg) scaleX(-1);}
+  .mascot .m-arm{
+    position:absolute; top:46%; width:5%; height:30%; background:#f582ae; border-radius:6px;
+    transform-origin:top center; transition:transform .25s;
+  }
+  .mascot .m-arm::after{
+    content:""; position:absolute; left:50%; bottom:-28%; width:230%; aspect-ratio:1;
+    background:#f582ae; border-radius:50%; transform:translateX(-50%);
+  }
+  .mascot .m-arm.l{left:14%; transform:rotate(18deg);}
+  .mascot .m-arm.r{right:14%; transform:rotate(-18deg);}
+  .mascot.cheer{animation:mascotCheer .7s ease-in-out infinite;}
+  @keyframes mascotCheer{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-12px) scale(1.04);}}
+  .mascot.cheer .m-arm.l{transform:rotate(-130deg);}
+  .mascot.cheer .m-arm.r{transform:rotate(130deg);}
+
+  /* ── 카드 수집(도감) ────────────────── */
+  .cards-progress{font-weight:800; font-size:15px; margin-bottom:12px; text-align:center;}
+  .cards-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(70px,1fr)); gap:10px;}
+  .collect-card{aspect-ratio:3/4; perspective:500px; background:none; padding:0;}
+  .collect-inner{width:100%; height:100%; position:relative;}
+  .collect-face{
+    position:absolute; inset:0; border-radius:14px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; font-weight:800;
+  }
+  .collect-face.locked{background:#e3e2ef; color:#aeb0c4; border:2px dashed #c7c6da;}
+  .collect-face.locked .lock-icon{font-size:20px; opacity:.7;}
+  .collect-face.unlocked{
+    background:linear-gradient(160deg,#fff,#f3eaff);
+    border:2px solid var(--accent-purple); box-shadow:0 3px 8px rgba(139,92,246,.25);
+  }
+  .collect-face.unlocked .letter{font-family:'Comic Sans MS',sans-serif; font-size:30px; color:var(--accent-purple);}
+  .collect-face.unlocked .mini-stars{font-size:10px; color:#f5a623; margin-top:2px;}
+  .collect-face.unlocked .spark{position:absolute; top:4px; right:6px; font-size:12px;}
+
   /* ── 공용 ─────────────────────────── */
   .panel{background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); margin-bottom:14px;}
   .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
@@ -82,6 +198,7 @@
   .btn.pink{background:var(--pink); color:#fff;}
   .btn.green{background:var(--green); color:#fff;}
   .btn.gray{background:#e3e8ef; color:#44546a;}
+  .btn.gold{background:linear-gradient(160deg,#ffd76a,var(--accent-gold)); color:#5c3a00; box-shadow:0 3px 0 #d79b1f;}
   .btn.small{font-size:13.5px; padding:8px 13px; border-radius:11px;}
   .btn:disabled{opacity:.45; cursor:default;}
   .section-title{font-size:18px; margin:4px 0 10px; display:flex; align-items:center; gap:8px;}
@@ -240,6 +357,8 @@
 </head>
 <body>
 
+<div class="bg-deco" id="bgDeco"></div>
+
 <header>
   <button class="home-btn" id="btnHome" title="처음으로">🏠</button>
   <h1 id="headerTitle">소리쑥쑥 파닉스</h1>
@@ -251,10 +370,24 @@
   <!-- ═══════════ 홈 ═══════════ -->
   <section class="screen active" id="scr-home">
     <div class="hello">
-      <h2>소리쑥쑥 파닉스 🎈</h2>
-      <p>알파벳 쓰기부터 소리 합치기, 긴 단어 읽기까지!<br>글자 밑의 점(●)을 누르고, 쭈욱 드래그해서 소리를 합쳐 보세요.</p>
+      <div class="hello-text">
+        <h2>소리쑥쑥 파닉스 🎈</h2>
+        <p>알파벳 쓰기부터 소리 합치기, 긴 단어 읽기까지!<br>글자 밑의 점(●)을 누르고, 쭈욱 드래그해서 소리를 합쳐 보세요.</p>
+      </div>
+      <div class="mascot" id="homeMascot">
+        <div class="m-leaf l"></div><div class="m-leaf r"></div>
+        <div class="m-body">
+          <div class="m-face">
+            <span class="m-eye"></span><span class="m-eye"></span>
+            <span class="m-mouth"></span>
+          </div>
+          <span class="m-cheek l"></span><span class="m-cheek r"></span>
+        </div>
+        <span class="m-arm l"></span><span class="m-arm r"></span>
+      </div>
     </div>
-    <div class="menu-grid">
+    <div class="week-stamp" id="weekStamp"></div>
+    <div class="menu-path">
       <button class="menu-card" data-go="trace">
         <span class="step-tag">1단계</span>
         <div class="emoji">✏️</div>
@@ -290,8 +423,27 @@
         <p>in·for·ma·tion처럼 긴 단어를 덩어리(chunk)로 잘라 읽는 법을 배워요.</p>
         <span class="badge" id="badgeChunk">0단어</span>
       </button>
+      <button class="menu-card" data-go="cards">
+        <span class="step-tag">도감</span>
+        <div class="emoji">🎴</div>
+        <h3>카드 수집</h3>
+        <p>글자와 단어를 익힐 때마다 카드가 모여요. 도감을 완성해 보세요!</p>
+        <span class="badge" id="badgeCards">0/26장</span>
+      </button>
     </div>
     <p class="hint-text" style="margin-top:14px">🔈 소리가 안 나면 기기의 무음 모드를 해제해 주세요. 영어 발음은 기기에 내장된 음성으로 재생됩니다.</p>
+  </section>
+
+  <!-- ═══════════ 카드 수집(도감) ═══════════ -->
+  <section class="screen" id="scr-cards">
+    <div class="panel">
+      <h3 class="section-title">🎴 카드 수집 — 나만의 알파벳 도감</h3>
+      <p class="hint-text">따라쓰기에서 별 2개 이상을 받으면 그 글자 카드가 열려요!</p>
+    </div>
+    <div class="panel">
+      <div class="cards-progress" id="cardsProgress">0/26장 모았어요!</div>
+      <div class="cards-grid" id="cardsGrid"></div>
+    </div>
   </section>
 
   <!-- ═══════════ 따라쓰기 ═══════════ -->
@@ -325,7 +477,7 @@
       <h3 class="section-title">🔍 대문자·소문자 짝꿍 찾기</h3>
       <p class="hint-text">글자를 보고 짝이 되는 대문자 또는 소문자를 골라요. 모두 10문제! 따라쓰기를 먼저 연습하면 훨씬 쉬워요.</p>
       <div class="row" style="margin-top:14px">
-        <button class="btn pink" id="btnTestStart">🚀 테스트 시작!</button>
+        <button class="btn gold" id="btnTestStart">🚀 테스트 시작!</button>
       </div>
     </div>
     <div class="panel" id="testPlay" style="display:none">
@@ -355,7 +507,7 @@
       <h3 class="section-title">🃏 대문자·소문자 짝꿍 카드 게임</h3>
       <p class="hint-text">카드를 두 장씩 뒤집어서 대문자와 소문자 짝을 찾아요. 적은 횟수로 다 맞추면 별을 더 많이 받아요!</p>
       <div class="row" style="margin-top:14px">
-        <button class="btn pink" id="btnGameStart">🎮 게임 시작!</button>
+        <button class="btn gold" id="btnGameStart">🎮 게임 시작!</button>
       </div>
     </div>
     <div id="gamePlay" style="display:none">
@@ -367,7 +519,7 @@
     </div>
     <div class="panel" id="gameResult" style="display:none">
       <div class="result-box">
-        <div class="big">🏆</div>
+        <div class="big" id="gameResultEmoji">🏆</div>
         <h3 id="gameResultText"></h3>
         <div id="gameResultStars" style="font-size:34px"></div>
         <div class="row" style="justify-content:center; margin-top:14px">
@@ -431,7 +583,7 @@
 
 /* ── 저장소 ── */
 const STORE_KEY = "phonicsApp.v1";
-let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true };
+let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[] };
 try { store = Object.assign(store, JSON.parse(localStorage.getItem(STORE_KEY)||"{}")); } catch(e){}
 function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
 
@@ -493,7 +645,7 @@ function confetti(n=24){
 
 /* ── 화면 전환 ── */
 const TITLES={home:"소리쑥쑥 파닉스", trace:"✏️ 알파벳 따라쓰기", test:"🔍 대문자·소문자 테스트",
-  game:"🃏 짝꿍 카드 게임", blend:"🔊 소리 합치기", chunk:"🧩 청크 읽기", play:"🔊 소리 합치기"};
+  game:"🃏 짝꿍 카드 게임", blend:"🔊 소리 합치기", chunk:"🧩 청크 읽기", play:"🔊 소리 합치기", cards:"🎴 카드 수집"};
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("scr-"+id).classList.add("active");
@@ -506,6 +658,7 @@ document.querySelectorAll(".menu-card").forEach(c=>c.onclick=()=>{
   if(go==="trace") initTraceScreen();
   if(go==="blend") renderLevelList("blend");
   if(go==="chunk") renderLevelList("chunk");
+  if(go==="cards") renderCardsScreen();
   show(go);
 });
 
@@ -525,9 +678,107 @@ function refreshBadges(){
   document.getElementById("badgeGame").textContent = store.gameBestMoves>0?("최소 "+store.gameBestMoves+"번"):"기록 없음";
   document.getElementById("badgeBlend").textContent = Object.keys(store.blendDone).length+"단어";
   document.getElementById("badgeChunk").textContent = Object.keys(store.chunkDone).length+"단어";
+  document.getElementById("badgeCards").textContent = unlockedLetters().length+"/26장";
   document.getElementById("starTotal").textContent = starCount();
+  renderWeekStamp();
 }
 refreshBadges();
+
+/* ── 카드 수집(도감) ── */
+function unlockedLetters(){
+  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").filter(L => (store.trace["U"+L]||0)>=2 || (store.trace["L"+L]||0)>=2);
+}
+function renderCardsScreen(){
+  const unlocked = new Set(unlockedLetters());
+  document.getElementById("cardsProgress").textContent = `${unlocked.size}/26장 모았어요!`;
+  const grid = document.getElementById("cardsGrid");
+  grid.innerHTML = "";
+  ALPHA.forEach(L=>{
+    const got = unlocked.has(L);
+    const stars = Math.max(store.trace["U"+L]||0, store.trace["L"+L]||0);
+    const card = document.createElement("button");
+    card.className = "collect-card";
+    card.innerHTML = got
+      ? `<div class="collect-inner"><div class="collect-face unlocked">
+           <span class="spark">✨</span>
+           <span class="letter">${L}${L.toLowerCase()}</span>
+           <span class="mini-stars">${"★".repeat(stars)}</span>
+         </div></div>`
+      : `<div class="collect-inner"><div class="collect-face locked">
+           <span class="lock-icon">🔒</span><span>?</span>
+         </div></div>`;
+    if(got){
+      card.onclick=()=>speak(L,{rate:0.9});
+    }
+    grid.appendChild(card);
+  });
+}
+
+/* ── 주간 출석 도장 ── */
+function todayStr(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function recordVisit(){
+  if(!store.visitDates) store.visitDates=[];
+  const t=todayStr();
+  if(!store.visitDates.includes(t)){ store.visitDates.push(t); save(); }
+}
+function renderWeekStamp(){
+  const box=document.getElementById("weekStamp");
+  if(!box) return;
+  const dayNames=["일","월","화","수","목","금","토"];
+  const now=new Date();
+  const startOfWeek=new Date(now);
+  startOfWeek.setDate(now.getDate()-now.getDay());
+  const t=todayStr();
+  let html="";
+  for(let i=0;i<7;i++){
+    const d=new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate()+i);
+    const ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const got=(store.visitDates||[]).includes(ds);
+    const isToday=ds===t;
+    html+=`<div class="stamp-day${got?" got":""}${isToday?" today":""}">
+      <span class="stamp-label">${dayNames[i]}</span>
+      <span class="stamp-dot">${got?"🌱":""}</span>
+    </div>`;
+  }
+  box.innerHTML=html;
+}
+recordVisit();
+renderWeekStamp();
+
+/* ── 배경 장식(반짝이·버블) ── */
+function renderBgDeco(){
+  const box=document.getElementById("bgDeco");
+  if(!box) return;
+  const bubbles=[
+    {s:140,x:"6%",y:"4%"},{s:100,x:"82%",y:"10%"},{s:70,x:"18%",y:"40%"},
+    {s:160,x:"74%",y:"58%"},{s:90,x:"4%",y:"78%"},{s:120,x:"88%",y:"86%"}
+  ];
+  const sparks=[
+    {x:"12%",y:"14%"},{x:"70%",y:"6%"},{x:"90%",y:"34%"},{x:"8%",y:"60%"},
+    {x:"60%",y:"82%"},{x:"35%",y:"24%"},{x:"50%",y:"92%"}
+  ];
+  let html="";
+  bubbles.forEach(b=>{ html+=`<div class="bubble" style="width:${b.s}px;height:${b.s}px;left:${b.x};top:${b.y}"></div>`; });
+  sparks.forEach(s=>{ html+=`<div class="spark" style="left:${s.x};top:${s.y}">✨</div>`; });
+  box.innerHTML=html;
+}
+renderBgDeco();
+
+/* ── 재사용 마스코트 마크업(축하 화면용) ── */
+function mascotMarkup(cheer){
+  return `<div class="mascot${cheer?" cheer":""}" style="margin:0 auto 6px">
+    <div class="m-leaf l"></div><div class="m-leaf r"></div>
+    <div class="m-body">
+      <div class="m-face"><span class="m-eye"></span><span class="m-eye"></span><span class="m-mouth"></span></div>
+      <span class="m-cheek l"></span><span class="m-cheek r"></span>
+    </div>
+    <span class="m-arm l"></span><span class="m-arm r"></span>
+  </div>`;
+}
 
 /* ═══════════════════════════════════════════════
    1) 알파벳 따라쓰기
@@ -1017,7 +1268,9 @@ function finishQuiz(){
   document.getElementById("testResult").style.display="block";
   const ok=quiz.ok;
   const stars=ok>=9?3:ok>=7?2:ok>=5?1:0;
-  document.getElementById("testResultEmoji").textContent = stars>=2?"🎉":stars===1?"😊":"💪";
+  const emojiBox=document.getElementById("testResultEmoji");
+  if(stars>=2) emojiBox.innerHTML=mascotMarkup(true);
+  else { emojiBox.innerHTML=""; emojiBox.textContent = stars===1?"😊":"💪"; }
   document.getElementById("testResultText").textContent = `10문제 중 ${ok}개 정답!`;
   document.getElementById("testResultStars").textContent = stars>0?"⭐".repeat(stars):"다시 도전해 봐요!";
   if(ok>store.testBest){ store.testBest=ok; save(); }
@@ -1083,6 +1336,7 @@ function finishGame(){
   document.getElementById("gameResult").style.display="block";
   const m=game.moves;
   const stars=m<=9?3:m<=13?2:1;
+  document.getElementById("gameResultEmoji").innerHTML=mascotMarkup(true);
   document.getElementById("gameResultText").textContent=`${m}번 만에 모두 맞췄어요!`;
   document.getElementById("gameResultStars").textContent="⭐".repeat(stars);
   if(store.gameBestMoves<0||m<store.gameBestMoves){ store.gameBestMoves=m; save(); }
