@@ -647,7 +647,29 @@ function pickVoice(){
 pickVoice();
 if (typeof speechSynthesis!=="undefined") speechSynthesis.onvoiceschanged = pickVoice;
 
+/* 단어·음소 발음 사전 녹음(원어민 신경망 TTS로 생성, audio/words/<key>.mp3).
+   기기 내장 TTS(Web Speech API)는 기기·브라우저마다 품질이 들쭉날쭉하고
+   때로 원어민이 아닌 것처럼 들릴 수 있어, 블렌딩/청크에서 실제로 말해지는
+   단어·음소는 모두 이 사전 녹음을 우선 사용하고, 없는 경우에만 기기 TTS로
+   대체한다(clipMs로 중간에 끊는 경우 — 글자 하나만 들려줘야 하는 특수한
+   케이스 — 는 대상이 아니므로 그대로 기기 TTS를 쓴다). */
+const TEXT_AUDIO_KEYS = new Set(["ack","action","ah","an","animal","ar","aw","ax","ay","bag","banana","basket","bass","bat","bath","bed","beg","ber","big","bike","bill","bit","black","boat","box","brel","bug","buh","buhl","bull","bun","bur","bus","cack","cactus","cake","can","candy","cap","car","care","careful","cat","chat","cher","chin","chop","chuh","chun","clap","coat","come","communication","computer","cop","corn","cot","crab","cube","cup","cut","dane","dangerous","day","decision","dee","den","der","dick","dictionary","dig","dih","dinosaur","dog","dough","drum","duh","dur","dye","education","ee","eh","el","elephant","er","eye","famous","fan","fant","fay","feet","fer","few","fin","fish","fit","five","flag","fort","fox","frog","fuh","fuhl","full","fun","fur","future","gar","garden","gate","geh","goat","guh","guhl","gum","gur","hah","hap","happy","hat","hen","her","herd","hit","holiday","home","hope","hospital","hoss","hot","hug","huh","hut","ih","im","imagination","important","impossible","in","information","interesting","it","jam","jar","jer","jet","jog","joo","jug","juh","kay","kid","kin","king","kit","kuh","kuhl","kur","kwaw","kwes","lap","late","leg","let","lid","lih","like","lip","log","lotion","low","luh","mad","mag","magnet","mail","map","may","mem","men","mew","moon","mop","mor","more","morning","mud","muh","mull","muss","nah","name","nan","nap","napkin","nation","national","nature","nay","neh","net","nick","nih","ning","not","note","nuh","null","nut","oh","oo","or","pain","pan","path","pee","pen","pet","pew","pick","picnic","picture","pig","pih","pin","plan","pool","pop","pore","poss","pot","potato","puh","puhl","pump","pumpkin","question","rab","rabbit","rain","rat","read","red","ree","remember","responsibility","ress","ride","rih","ring","rod","rose","row","ruh","run","russ","sad","seed","set","shed","ship","shop","short","shuh","shun","shut","sih","sing","sit","six","skip","skuh","smuh","snap","snuh","soap","sore","spahn","spuh","stand","star","station","stay","stop","stuh","suh","suhl","sun","sunset","swim","swuh","tail","tay","teacher","team","tee","ten","ter","term","ther","thin","thuh","ting","toe","together","tomorrow","top","trip","tuh","tull","tune","tunt","tur","tuss","uh","um","umbrella","un","understand","ung","university","van","ver","vet","vuh","wet","win","window","wish","won","yoo","young","zhun","zi","zip"]);
+function textAudioKey(text){ return (text||"").toLowerCase().replace(/[^a-z0-9]/g,""); }
+const textAudioEl = new Audio();
+function playTextSound(text){
+  const key = textAudioKey(text);
+  if(!TEXT_AUDIO_KEYS.has(key)) return false;
+  try{
+    textAudioEl.pause();
+    textAudioEl.currentTime = 0;
+    textAudioEl.src = "audio/words/"+key+".mp3";
+    textAudioEl.play().catch(()=>{});
+    return true;
+  }catch(e){ return false; }
+}
+
 function speak(text, {rate=0.85, pitch=1.05, interrupt=true, clipMs=null}={}){
+  if(!clipMs && playTextSound(text)) return;
   if (typeof speechSynthesis==="undefined") return;
   if (interrupt) speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
@@ -1527,7 +1549,7 @@ const PHONEME = {
   st:["stuh","스트","c"], sp:["spuh","스프","c"], sn:["snuh","스느","c"], sw:["swuh","스우","c"],
   sk:["skuh","스크","c"], sm:["smuh","스므","c"],
   a:["ah","애","v"], e:["eh","에","v"], i:["it","이","v"], o:["aw","아","v"], u:["uh","어","v"],
-  sh:["shh","쉬","d"], ch:["chuh","취","d"], th:["thuh","쓰","d"], ng:["ung","응","d"], ck:["kuh","크","d"],
+  sh:["shuh","쉬","d"], ch:["chuh","취","d"], th:["thuh","쓰","d"], ng:["ung","응","d"], ck:["kuh","크","d"],
   ai:["ay","에이","t"], ay:["ay","에이","t"], ee:["ee","이-","t"], ea:["ee","이-","t"],
   oa:["oh","오우","t"], oo:["oo","우-","t"], ar:["ar","아-르","t"], or:["or","오-르","t"], er:["er","어-르","t"],
   a_e:["ay","에이","m"], i_e:["eye","아이","m"], o_e:["oh","오우","m"], u_e:["yoo","유","m"], e_e:["ee","이-","m"]
