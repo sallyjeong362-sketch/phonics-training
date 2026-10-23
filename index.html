@@ -65,13 +65,13 @@
   .hello{
     background:linear-gradient(135deg,var(--accent-purple),var(--accent-pink)); color:#fff;
     border-radius:var(--radius); padding:20px 22px; margin-bottom:14px;
-    box-shadow:var(--shadow); position:relative; overflow:hidden;
-    display:flex; align-items:center; gap:14px;
+    box-shadow:var(--shadow); position:relative;
+    display:flex; align-items:center; gap:14px; min-height:96px;
   }
   .hello .hello-text{flex:1; min-width:0;}
   .hello h2{margin:0 0 6px; font-size:24px;}
   .hello p{margin:0; opacity:.95; font-size:15px; line-height:1.5;}
-  .hello .mascot{flex-shrink:0; transform:scale(.8);}
+  .hello .mascot{flex-shrink:0; transform:scale(.8); margin-top:26px;}
 
   /* ── 주간 출석 도장 ───────────────── */
   .week-stamp{
@@ -125,6 +125,12 @@
   }
   .step-tag{display:inline-block; background:var(--deep); color:#fff; font-size:11px;
     border-radius:999px; padding:2px 9px; margin-bottom:4px; font-weight:700;}
+  .menu-card .new-dot{
+    position:absolute; top:-9px; left:16px; background:var(--red); color:#fff;
+    font-size:11px; font-weight:800; padding:3px 10px; border-radius:999px;
+    box-shadow:0 2px 6px rgba(239,69,101,.45); animation:newPulse 1.2s ease-in-out infinite; z-index:2;
+  }
+  @keyframes newPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.14);}}
 
   /* ── 마스코트 "쑥쑥이" ──────────────── */
   .mascot{position:relative; width:72px; height:92px; animation:mascotBob 2.6s ease-in-out infinite;}
@@ -167,6 +173,8 @@
   @keyframes mascotCheer{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-12px) scale(1.04);}}
   .mascot.cheer .m-arm.l{transform:rotate(-130deg);}
   .mascot.cheer .m-arm.r{transform:rotate(130deg);}
+  .mascot.pop{animation:mascotPop .4s ease;}
+  @keyframes mascotPop{0%{transform:scale(1);}45%{transform:scale(1.14) rotate(-4deg);}100%{transform:scale(1);}}
 
   /* ── 쑥쑥이 꾸미기(악세서리) ────────── */
   .acc-progress{font-weight:800; font-size:15px; margin-bottom:12px; text-align:center;}
@@ -184,6 +192,14 @@
     width:18px; height:18px; border-radius:50%; font-size:11px; display:flex; align-items:center; justify-content:center;
   }
   .acc-item .locked-dim{filter:grayscale(1) opacity(.5);}
+  .acc-item .acc-new{
+    position:absolute; top:-7px; left:8px; background:var(--red); color:#fff;
+    font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; z-index:3;
+    animation:newPulse 1.2s ease-in-out infinite;
+  }
+  .acc-gauge{background:#eef0f6; border-radius:999px; height:12px; overflow:hidden; margin:10px 0 4px;}
+  .acc-gauge-fill{height:100%; background:linear-gradient(90deg,var(--accent-purple),var(--accent-pink)); border-radius:999px; transition:width .4s ease;}
+  .acc-next-hint{font-size:12.5px; color:#8a94a6; font-weight:700; text-align:center; margin-top:2px;}
 
   /* 악세서리 도형(퍼센트 기반 — 마스코트/프리뷰 어디서든 재사용) */
   .acc-flower{position:absolute; top:-6%; left:28%; width:30%; height:30%; z-index:4;}
@@ -223,6 +239,27 @@
   .acc-wings .wing{position:absolute; top:0; width:38%; height:100%; background:rgba(255,255,255,.6); border:2px solid rgba(255,255,255,.85);}
   .acc-wings .wing.l{left:0; border-radius:100% 0% 60% 40%/100% 0% 100% 0%; transform:rotate(-12deg);}
   .acc-wings .wing.r{right:0; border-radius:0% 100% 40% 60%/0% 100% 0% 100%; transform:rotate(12deg);}
+
+  /* ── 아이템 획득 팝업 ───────────────── */
+  .unlock-overlay{
+    position:fixed; inset:0; z-index:1000; background:rgba(23,16,54,.55);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    animation:ovFadeIn .2s ease;
+  }
+  @keyframes ovFadeIn{from{opacity:0;}to{opacity:1;}}
+  .unlock-card{
+    background:#fff; border-radius:24px; padding:26px 22px; max-width:340px; width:100%;
+    text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.3); animation:unlockPopIn .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes unlockPopIn{from{transform:scale(.7); opacity:0;}to{transform:scale(1); opacity:1;}}
+  .unlock-card h3{margin:6px 0 4px; font-size:20px; color:var(--accent-purple);}
+  .unlock-card .sub{margin:0 0 6px; font-size:13px; color:#5f6c7b;}
+  .unlock-items{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:16px 0;}
+  .unlock-item{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .unlock-item .acc-preview{width:64px; height:64px; position:relative; background:#f8f6ff; border-radius:16px;}
+  .unlock-item .name{font-size:12.5px; font-weight:800; color:#5f6c7b;}
+  .unlock-card .row-btns{display:flex; gap:8px; margin-top:6px;}
+  .unlock-card .row-btns .btn{flex:1;}
 
   /* ── 공용 ─────────────────────────── */
   .panel{background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); margin-bottom:14px;}
@@ -462,6 +499,7 @@
         <span class="badge" id="badgeChunk">0단어</span>
       </button>
       <button class="menu-card" data-go="dressup">
+        <span class="new-dot" id="dressNewDot" hidden>NEW</span>
         <span class="step-tag">꾸미기</span>
         <div class="emoji">👒</div>
         <h3>쑥쑥이 꾸미기</h3>
@@ -625,8 +663,11 @@
 
 /* ── 저장소 ── */
 const STORE_KEY = "phonicsApp.v1";
-let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[], equippedAcc:{} };
-try { store = Object.assign(store, JSON.parse(localStorage.getItem(STORE_KEY)||"{}")); } catch(e){}
+let _rawSaved = {};
+try { _rawSaved = JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); } catch(e){}
+let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[], equippedAcc:{}, accSeen:[], lastCelebratedStars:0 };
+store = Object.assign(store, _rawSaved);
+const _isPreUnlockSave = !("accSeen" in _rawSaved);
 function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
 
 /* ── 음성 (Web Speech API) ── */
@@ -722,6 +763,13 @@ const ACCESSORIES = [
   {id:"crown", slot:"head", name:"반짝 왕관", cost:35},
   {id:"wings", slot:"back", name:"요정 날개", cost:50}
 ];
+if(_isPreUnlockSave){
+  /* 이미 모은 아이템은 새로 "획득!" 팝업을 띄우지 않도록, 처음 한 번만 조용히 기록 */
+  const s0 = starCount();
+  store.accSeen = ACCESSORIES.filter(a=>s0>=a.cost).map(a=>a.id);
+  store.lastCelebratedStars = s0;
+  save();
+}
 function accessoryPartHtml(id){
   switch(id){
     case "flower": return `<div class="acc acc-flower"><span></span><span></span><span></span><span></span><i></i></div>`;
@@ -748,21 +796,71 @@ function refreshHomeMascot(){
   const el=document.getElementById("homeMascot");
   if(el) el.innerHTML = mascotInner();
 }
+function bounceDressupMascot(){
+  const el = document.querySelector("#dressupPreview .mascot");
+  if(!el) return;
+  el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
+  setTimeout(()=>el.classList.remove("pop"), 420);
+}
+function goToDressup(){ renderDressupScreen(); show("dressup"); }
+function checkAccessoryUnlocks(){
+  const stars = starCount();
+  const prev = store.lastCelebratedStars||0;
+  if(stars<=prev) return;
+  const newly = ACCESSORIES.filter(a=>a.cost>prev && a.cost<=stars);
+  store.lastCelebratedStars = stars;
+  save();
+  if(newly.length) showUnlockPopup(newly);
+}
+function showUnlockPopup(items){
+  confetti(20); sfxWin();
+  const ov=document.createElement("div");
+  ov.className="unlock-overlay";
+  ov.innerHTML = `
+    <div class="unlock-card">
+      <div style="font-size:38px">🎉</div>
+      <h3>새 아이템을 모았어요!</h3>
+      <p class="sub">쑥쑥이를 꾸밀 수 있어요</p>
+      <div class="unlock-items">
+        ${items.map(a=>`
+          <div class="unlock-item">
+            <div class="acc-preview">${accessoryPartHtml(a.id)}</div>
+            <span class="name">${a.name}</span>
+          </div>`).join("")}
+      </div>
+      <div class="row-btns">
+        <button class="btn gray small" data-act="close">나중에</button>
+        <button class="btn pink small" data-act="go">지금 꾸미기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('[data-act="close"]').onclick=()=>ov.remove();
+  ov.querySelector('[data-act="go"]').onclick=()=>{ ov.remove(); goToDressup(); };
+  ov.addEventListener("click", e=>{ if(e.target===ov) ov.remove(); });
+}
 function renderDressupScreen(){
   const stars = starCount();
   const eq = store.equippedAcc||{};
   document.getElementById("dressupPreview").innerHTML = `<div class="mascot lg" style="margin:0 auto">${mascotInner()}</div>`;
   const unlockedCount = ACCESSORIES.filter(a=>stars>=a.cost).length;
-  document.getElementById("dressupProgress").textContent = `${unlockedCount}/${ACCESSORIES.length}개 모았어요! (⭐${stars})`;
+  const nextLocked = ACCESSORIES.filter(a=>stars<a.cost).sort((a,b)=>a.cost-b.cost)[0];
+  const gaugeHtml = nextLocked
+    ? `<div class="acc-gauge"><div class="acc-gauge-fill" style="width:${Math.min(100, stars/nextLocked.cost*100)}%"></div></div>
+       <div class="acc-next-hint">⭐${nextLocked.cost-stars}개만 더 모으면 "${nextLocked.name}" 열려요!</div>`
+    : `<div class="acc-next-hint">🎉 아이템을 모두 모았어요!</div>`;
+  document.getElementById("dressupProgress").innerHTML =
+    `${unlockedCount}/${ACCESSORIES.length}개 모았어요! (⭐${stars})${gaugeHtml}`;
   const grid = document.getElementById("dressupGrid");
   grid.innerHTML = "";
+  const seenNow = new Set(store.accSeen||[]);
   ACCESSORIES.forEach(a=>{
     const unlocked = stars>=a.cost;
     const equipped = eq[a.slot]===a.id;
+    const isNew = unlocked && !seenNow.has(a.id);
     const btn=document.createElement("button");
     btn.className="acc-item"+(equipped?" equipped":"")+(unlocked?"":" locked");
     btn.innerHTML = unlocked
-      ? `<div class="acc-preview">${accessoryPartHtml(a.id)}</div><span class="acc-name">${a.name}</span>${equipped?'<span class="acc-check">✓</span>':""}`
+      ? `${isNew?'<span class="acc-new">NEW</span>':""}<div class="acc-preview">${accessoryPartHtml(a.id)}</div><span class="acc-name">${a.name}</span>${equipped?'<span class="acc-check">✓</span>':""}`
       : `<div class="acc-preview locked-dim">${accessoryPartHtml(a.id)}</div><span class="acc-name">🔒 ⭐${a.cost}</span>`;
     if(unlocked){
       btn.onclick=()=>{
@@ -771,10 +869,16 @@ function renderDressupScreen(){
         save();
         renderDressupScreen();
         refreshHomeMascot();
+        bounceDressupMascot();
+        beep(equipped?440:740, .1);
       };
     }
     grid.appendChild(btn);
   });
+  if(!store.accSeen) store.accSeen=[];
+  let seenChanged=false;
+  ACCESSORIES.forEach(a=>{ if(stars>=a.cost && !store.accSeen.includes(a.id)){ store.accSeen.push(a.id); seenChanged=true; } });
+  if(seenChanged) save();
 }
 document.getElementById("btnDressupReset").onclick=()=>{
   store.equippedAcc = {};
@@ -792,6 +896,9 @@ function refreshBadges(){
   document.getElementById("badgeChunk").textContent = Object.keys(store.chunkDone).length+"단어";
   document.getElementById("badgeDress").textContent = ACCESSORIES.filter(a=>starCount()>=a.cost).length+"/"+ACCESSORIES.length+"개";
   document.getElementById("starTotal").textContent = starCount();
+  checkAccessoryUnlocks();
+  const dressNew = ACCESSORIES.some(a=>starCount()>=a.cost && !(store.accSeen||[]).includes(a.id));
+  document.getElementById("dressNewDot").hidden = !dressNew;
   renderWeekStamp();
   refreshHomeMascot();
 }
