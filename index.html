@@ -178,65 +178,40 @@
 
   /* ── 피규어 수집 ────────────────────── */
   .fig-progress{font-weight:800; font-size:15px; margin-bottom:12px; text-align:center;}
-  .fig-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:12px;}
-  .fig-item{
-    background:#fff; border:3px solid #e3e2ef; border-radius:16px; padding:10px 6px;
-    display:flex; flex-direction:column; align-items:center; gap:6px; position:relative;
-  }
-  .fig-item .fig-preview{width:56px; height:56px; position:relative;}
-  .fig-item .fig-name{font-size:12px; font-weight:800; color:#5f6c7b; text-align:center;}
-  .fig-item.got{border-color:var(--accent-purple); background:linear-gradient(160deg,#fff,#f3eaff); box-shadow:0 3px 8px rgba(139,92,246,.2);}
-  .fig-item.locked{opacity:.55;}
-  .fig-item .locked-dim{filter:grayscale(1) opacity(.5);}
-  .fig-item .fig-new{
-    position:absolute; top:-7px; left:8px; background:var(--red); color:#fff;
-    font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; z-index:3;
-    animation:newPulse 1.2s ease-in-out infinite;
-  }
   .fig-gauge{background:#eef0f6; border-radius:999px; height:12px; overflow:hidden; margin:10px 0 4px;}
   .fig-gauge-fill{height:100%; background:linear-gradient(90deg,var(--accent-purple),var(--accent-pink)); border-radius:999px; transition:width .4s ease;}
   .fig-next-hint{font-size:12.5px; color:#8a94a6; font-weight:700; text-align:center; margin-top:2px;}
 
-  /* 피규어 캐릭터 — 마스코트에 덧입히지 않는 독립형 캐릭터. 각자 자기 박스(.figure) 안에서만
-     퍼센트 기준으로 그려지므로, 바깥 레이아웃(히어로 배너 등) 높이 변화에 영향받지 않는다. */
-  .figure{position:relative; width:100%; height:100%;}
-  .figure .f-body{position:absolute; left:10%; top:14%; width:80%; height:78%; border-radius:50% 50% 46% 46%/58% 58% 42% 42%;}
-  .figure .f-face{position:absolute; left:50%; top:30%; width:58%; transform:translateX(-50%); text-align:center; z-index:3;}
-  .figure .f-eye{display:inline-block; width:14%; aspect-ratio:1; background:#2a1b33; border-radius:50%; margin:0 8%;}
-  .figure .f-mouth{display:block; width:28%; aspect-ratio:2/1; margin:5% auto 0; border-bottom:3px solid #2a1b33; border-radius:0 0 50% 50%;}
-
-  .fig-chick .f-body{background:linear-gradient(160deg,#fff6a8,#ffd84d);}
-  .fig-chick .f-wing{position:absolute; top:52%; width:22%; height:28%; background:#ffcb3d; border-radius:50% 50% 50% 10%;}
-  .fig-chick .f-wing.l{left:2%; transform:rotate(-10deg);}
-  .fig-chick .f-wing.r{right:2%; transform:rotate(10deg) scaleX(-1);}
-  .fig-chick .f-beak{position:absolute; left:50%; top:46%; width:14%; height:10%; background:#ff9d3d; clip-path:polygon(0 0,100% 20%,0 100%); transform:translateX(-50%);}
-
-  .fig-bunny .f-body{background:linear-gradient(160deg,#fffdf7,#ffeef5);}
-  .fig-bunny .f-ear{position:absolute; top:-30%; width:20%; height:48%; background:#fff6fa; border:2px solid #ffd9e6; border-radius:50%/60% 60% 40% 40%;}
-  .fig-bunny .f-ear.l{left:16%; transform:rotate(-12deg);}
-  .fig-bunny .f-ear.r{right:16%; transform:rotate(12deg);}
-  .fig-bunny .f-ear i{position:absolute; left:50%; top:30%; width:50%; height:50%; background:#ffb3c6; border-radius:50%; transform:translateX(-50%);}
-
-  .fig-cat .f-body{background:linear-gradient(160deg,#ffe3b0,#ffc478);}
-  .fig-cat .f-ear{position:absolute; top:-14%; width:26%; height:30%; background:#ffc478; clip-path:polygon(50% 0,0 100%,100% 100%);}
-  .fig-cat .f-ear.l{left:10%; transform:rotate(-8deg);}
-  .fig-cat .f-ear.r{right:10%; transform:rotate(8deg);}
-
-  .fig-star .f-body{
-    background:linear-gradient(160deg,#fff2a8,#ffd54f);
-    clip-path:polygon(50% 0%,64% 34%,100% 36%,72% 58%,82% 92%,50% 70%,18% 92%,28% 58%,0% 36%,36% 34%);
+  /* 테마별 수집 도감 */
+  .coll-theme{margin-bottom:20px;}
+  .coll-theme h4{display:flex; align-items:center; justify-content:space-between; font-size:14.5px; font-weight:800; color:#5f6c7b; margin:0 0 8px;}
+  .coll-theme .theme-count{font-weight:700; color:#8a94a6; font-size:12.5px;}
+  .coll-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(86px,1fr)); gap:10px;}
+  .coll-item{
+    background:#fff; border:3px solid #e3e2ef; border-radius:16px; padding:8px 4px;
+    display:flex; flex-direction:column; align-items:center; gap:3px; position:relative;
   }
-
-  .fig-cloud .f-body{background:linear-gradient(160deg,#ffffff,#eef1ff); border-radius:50%;}
-  .fig-cloud .f-puff{position:absolute; bottom:24%; width:40%; height:40%; background:#fff; border-radius:50%;}
-  .fig-cloud .f-puff.l{left:-6%;} .fig-cloud .f-puff.r{right:-6%;}
-
-  .fig-butterfly .f-body{left:42%; width:16%; background:linear-gradient(160deg,#6d5a8f,#4b3b6b);}
-  .fig-butterfly .f-wing{position:absolute; top:6%; width:42%; height:44%;}
-  .fig-butterfly .f-wing.tl{left:4%; background:linear-gradient(160deg,#ff9fc4,#ff6fa5); border-radius:100% 10% 100% 0%;}
-  .fig-butterfly .f-wing.tr{right:4%; background:linear-gradient(160deg,#9fd9ff,#5fb4ff); border-radius:10% 100% 0% 100%;}
-  .fig-butterfly .f-wing.bl{left:10%; top:46%; width:30%; height:32%; background:linear-gradient(160deg,#ffd27f,#ffb64f); border-radius:100% 10% 100% 0%;}
-  .fig-butterfly .f-wing.br{right:10%; top:46%; width:30%; height:32%; background:linear-gradient(160deg,#c6ff9f,#92e36a); border-radius:10% 100% 0% 100%;}
+  .coll-item.got{border-color:var(--accent-purple); background:linear-gradient(160deg,#fff,#f3eaff); box-shadow:0 3px 8px rgba(139,92,246,.18);}
+  .coll-item img{width:56px; height:56px; object-fit:contain; display:block;}
+  .coll-item img.locked{filter:brightness(0) opacity(.16);}
+  .coll-item .coll-name{font-size:11px; font-weight:800; color:#5f6c7b; text-align:center;}
+  .coll-item .coll-qty{
+    position:absolute; top:-6px; right:-6px; background:var(--accent-purple); color:#fff;
+    font-size:10px; font-weight:800; min-width:20px; height:20px; padding:0 4px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .coll-rarity{display:inline-block; font-size:9.5px; font-weight:800; padding:1px 7px; border-radius:999px;}
+  .coll-rarity.common{background:#eef0f6; color:#8a94a6;}
+  .coll-rarity.rare{background:#e0e7ff; color:#4f46e5;}
+  .coll-rarity.secret{background:linear-gradient(90deg,#ffe27a,#ffc24b); color:#7c4a00;}
+  .coll-item .fig-new{
+    position:absolute; top:-7px; left:6px; background:var(--red); color:#fff;
+    font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; z-index:3;
+    animation:newPulse 1.2s ease-in-out infinite;
+  }
+  .coll-reveal-img{width:130px; height:130px; object-fit:contain; display:block; margin:8px auto;}
+  .coll-reveal-img.secret-glow{animation:secretGlow 1.4s ease-in-out infinite;}
+  @keyframes secretGlow{0%,100%{filter:drop-shadow(0 0 4px #ffd54f);}50%{filter:drop-shadow(0 0 18px #ffd54f);}}
 
   /* ── 아이템 획득 팝업 ───────────────── */
   .unlock-overlay{
@@ -252,11 +227,7 @@
   @keyframes unlockPopIn{from{transform:scale(.7); opacity:0;}to{transform:scale(1); opacity:1;}}
   .unlock-card h3{margin:6px 0 4px; font-size:20px; color:var(--accent-purple);}
   .unlock-card .sub{margin:0 0 6px; font-size:13px; color:#5f6c7b;}
-  .unlock-items{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:16px 0;}
-  .unlock-item{display:flex; flex-direction:column; align-items:center; gap:6px;}
-  .unlock-item .fig-preview{width:64px; height:64px; position:relative; background:#f8f6ff; border-radius:16px;}
-  .unlock-item .name{font-size:12.5px; font-weight:800; color:#5f6c7b;}
-  .unlock-card .row-btns{display:flex; gap:8px; margin-top:6px;}
+  .unlock-card .row-btns{display:flex; gap:8px; margin-top:6px; align-items:center;}
   .unlock-card .row-btns .btn{flex:1;}
 
   /* ── 공용 ─────────────────────────── */
@@ -499,10 +470,10 @@
       <button class="menu-card" data-go="figures">
         <span class="new-dot" id="figNewDot" hidden>NEW</span>
         <span class="step-tag">수집</span>
-        <div class="emoji">🐣</div>
+        <div class="emoji">🎁</div>
         <h3>피규어 수집</h3>
-        <p>별을 모아서 쑥쑥이의 귀여운 친구들을 하나씩 모아 보세요!</p>
-        <span class="badge" id="badgeFigures">0/6개</span>
+        <p>별을 모아서 6개 테마, 60종의 귀여운 친구들을 뽑아 모아 보세요!</p>
+        <span class="badge" id="badgeFigures">0/60개</span>
       </button>
     </div>
     <p class="hint-text" style="margin-top:14px">🔈 소리가 안 나면 기기의 무음 모드를 해제해 주세요. 영어 발음은 기기에 내장된 음성으로 재생됩니다.</p>
@@ -511,13 +482,13 @@
   <!-- ═══════════ 피규어 수집 ═══════════ -->
   <section class="screen" id="scr-figures">
     <div class="panel" style="text-align:center">
-      <h3 class="section-title" style="justify-content:center">🐣 피규어 수집</h3>
-      <p class="hint-text">별을 모을수록 새 친구가 나타나요. 탭해서 구경해 보세요!</p>
+      <h3 class="section-title" style="justify-content:center">🎁 피규어 수집</h3>
+      <p class="hint-text">별을 모을수록 친구를 뽑을 기회가 생겨요. 탭해서 구경해 보세요!</p>
     </div>
     <div class="panel">
-      <div class="fig-progress" id="figuresProgress">0/6개 모았어요!</div>
-      <div class="fig-grid" id="figuresGrid"></div>
+      <div class="fig-progress" id="figuresProgress">0/60개 모았어요!</div>
     </div>
+    <div id="figuresGrid"></div>
   </section>
 
   <!-- ═══════════ 따라쓰기 ═══════════ -->
@@ -659,9 +630,9 @@
 const STORE_KEY = "phonicsApp.v1";
 let _rawSaved = {};
 try { _rawSaved = JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); } catch(e){}
-let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[], figuresSeen:[], lastCelebratedStars:0 };
+let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[], collection:{}, collectionSeen:[], drawsGranted:0 };
 store = Object.assign(store, _rawSaved);
-const _isPreUnlockSave = !("figuresSeen" in _rawSaved);
+const _isPreCollectionSave = !("drawsGranted" in _rawSaved);
 function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
 
 /* ── 음성 (Web Speech API) ── */
@@ -748,33 +719,38 @@ function starCount(){
   s += Object.keys(store.blendDone).length + Object.keys(store.chunkDone).length;
   return s;
 }
-/* ── 피규어 수집 ── */
-const FIGURES = [
-  {id:"chick", name:"삐약이", cost:0, blurb:"가장 먼저 알을 깨고 나온 친구예요!"},
-  {id:"bunny", name:"토실이", cost:5, blurb:"깡총깡총, 귀가 아주 길어요."},
-  {id:"cat", name:"냥냥이", cost:10, blurb:"소리 연습을 제일 좋아하는 친구예요."},
-  {id:"star", name:"반짝이", cost:20, blurb:"열심히 할 때마다 반짝반짝 빛나요."},
-  {id:"cloud", name:"몽글이", cost:35, blurb:"폭신폭신, 하늘에서 내려왔어요."},
-  {id:"butterfly", name:"나풀이", cost:50, blurb:"제일 늦게 날아온 신비한 친구예요."}
-];
-if(_isPreUnlockSave){
-  /* 이미 모은 친구는 새로 "획득!" 팝업을 띄우지 않도록, 처음 한 번만 조용히 기록 */
-  const s0 = starCount();
-  store.figuresSeen = FIGURES.filter(a=>s0>=a.cost).map(a=>a.id);
-  store.lastCelebratedStars = s0;
-  save();
+/* ── 피규어 수집 (일러스트 60종 · 6테마 × 10종, 뽑기 방식) ── */
+const COLLECTIBLES = [{"id":"midnight_library_01","name":"루나","description":"달빛 아래 책 읽는 고양이","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":1,"rarity":"common","rarity_name":"일반","image":"images/midnight_library/midnight_library_01.png"},{"id":"midnight_library_02","name":"모리","description":"안경 쓴 유령 사서","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":2,"rarity":"common","rarity_name":"일반","image":"images/midnight_library/midnight_library_02.png"},{"id":"midnight_library_03","name":"스텔라","description":"별을 찾은 토끼","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":3,"rarity":"common","rarity_name":"일반","image":"images/midnight_library/midnight_library_03.png"},{"id":"midnight_library_04","name":"오르","description":"등불을 든 부엉이","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":4,"rarity":"common","rarity_name":"일반","image":"images/midnight_library/midnight_library_04.png"},{"id":"midnight_library_05","name":"페이지","description":"책을 배달하는 여우","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":5,"rarity":"common","rarity_name":"일반","image":"images/midnight_library/midnight_library_05.png"},{"id":"midnight_library_06","name":"드림","description":"책 위에서 잠든 곰","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":6,"rarity":"rare","rarity_name":"레어","image":"images/midnight_library/midnight_library_06.png"},{"id":"midnight_library_07","name":"북키","description":"책갈피를 지키는 생쥐","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":7,"rarity":"rare","rarity_name":"레어","image":"images/midnight_library/midnight_library_07.png"},{"id":"midnight_library_08","name":"루미","description":"두루마리를 든 밤나방","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":8,"rarity":"rare","rarity_name":"레어","image":"images/midnight_library/midnight_library_08.png"},{"id":"midnight_library_09","name":"셀레네","description":"초승달의 수호 고양이","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":9,"rarity":"secret","rarity_name":"시크릿","image":"images/midnight_library/midnight_library_09.png"},{"id":"midnight_library_10","name":"아스트라","description":"별 왕관을 쓴 도서관 유령","theme_id":"midnight_library","theme_name":"미드나잇 도서관","number":10,"rarity":"secret","rarity_name":"시크릿","image":"images/midnight_library/midnight_library_10.png"},{"id":"little_dragons_01","name":"말차","description":"차 한 잔을 즐기는 초록 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":1,"rarity":"common","rarity_name":"일반","image":"images/little_dragons/little_dragons_01.png"},{"id":"little_dragons_02","name":"루비","description":"루비를 품은 흑요석 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":2,"rarity":"common","rarity_name":"일반","image":"images/little_dragons/little_dragons_02.png"},{"id":"little_dragons_03","name":"오팔","description":"무지갯빛 날개의 오팔 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":3,"rarity":"common","rarity_name":"일반","image":"images/little_dragons/little_dragons_03.png"},{"id":"little_dragons_04","name":"몽실","description":"구름을 두른 하늘 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":4,"rarity":"common","rarity_name":"일반","image":"images/little_dragons/little_dragons_04.png"},{"id":"little_dragons_05","name":"앰버","description":"호박빛 보석 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":5,"rarity":"common","rarity_name":"일반","image":"images/little_dragons/little_dragons_05.png"},{"id":"little_dragons_06","name":"코랄","description":"조개를 모으는 산호 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":6,"rarity":"rare","rarity_name":"레어","image":"images/little_dragons/little_dragons_06.png"},{"id":"little_dragons_07","name":"라벤","description":"낮잠 자는 라벤더 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":7,"rarity":"rare","rarity_name":"레어","image":"images/little_dragons/little_dragons_07.png"},{"id":"little_dragons_08","name":"모스","description":"도토리를 모으는 이끼 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":8,"rarity":"rare","rarity_name":"레어","image":"images/little_dragons/little_dragons_08.png"},{"id":"little_dragons_09","name":"오로라","description":"오로라를 두른 빛의 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":9,"rarity":"secret","rarity_name":"시크릿","image":"images/little_dragons/little_dragons_09.png"},{"id":"little_dragons_10","name":"녹스","description":"별을 품은 한밤의 용","theme_id":"little_dragons","theme_name":"작은 용의 보물창고","number":10,"rarity":"secret","rarity_name":"시크릿","image":"images/little_dragons/little_dragons_10.png"},{"id":"space_store_01","name":"누들","description":"라면을 좋아하는 외계인","theme_id":"space_store","theme_name":"우주 편의점","number":1,"rarity":"common","rarity_name":"일반","image":"images/space_store/space_store_01.png"},{"id":"space_store_02","name":"밀키","description":"우유팩 우주 로봇","theme_id":"space_store","theme_name":"우주 편의점","number":2,"rarity":"common","rarity_name":"일반","image":"images/space_store/space_store_02.png"},{"id":"space_store_03","name":"도니","description":"토성 도넛 배달원","theme_id":"space_store","theme_name":"우주 편의점","number":3,"rarity":"common","rarity_name":"일반","image":"images/space_store/space_store_03.png"},{"id":"space_store_04","name":"소다","description":"음료를 든 우주 고양이","theme_id":"space_store","theme_name":"우주 편의점","number":4,"rarity":"common","rarity_name":"일반","image":"images/space_store/space_store_04.png"},{"id":"space_store_05","name":"문바니","description":"별 간식을 고르는 달토끼","theme_id":"space_store","theme_name":"우주 편의점","number":5,"rarity":"common","rarity_name":"일반","image":"images/space_store/space_store_05.png"},{"id":"space_store_06","name":"젤리","description":"음료를 든 젤리 외계인","theme_id":"space_store","theme_name":"우주 편의점","number":6,"rarity":"rare","rarity_name":"레어","image":"images/space_store/space_store_06.png"},{"id":"space_store_07","name":"캐시","description":"별 모양 편의점 직원","theme_id":"space_store","theme_name":"우주 편의점","number":7,"rarity":"rare","rarity_name":"레어","image":"images/space_store/space_store_07.png"},{"id":"space_store_08","name":"오니","description":"주먹밥 우주 로봇","theme_id":"space_store","theme_name":"우주 편의점","number":8,"rarity":"rare","rarity_name":"레어","image":"images/space_store/space_store_08.png"},{"id":"space_store_09","name":"갤럭시","description":"은하수를 품은 슬러시 친구","theme_id":"space_store","theme_name":"우주 편의점","number":9,"rarity":"secret","rarity_name":"시크릿","image":"images/space_store/space_store_09.png"},{"id":"space_store_10","name":"노바","description":"행성 간식을 발견한 우주 탐험가","theme_id":"space_store","theme_name":"우주 편의점","number":10,"rarity":"secret","rarity_name":"시크릿","image":"images/space_store/space_store_10.png"},{"id":"rainy_friends_01","name":"우비","description":"노란 우비를 입은 수달","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":1,"rarity":"common","rarity_name":"일반","image":"images/rainy_friends/rainy_friends_01.png"},{"id":"rainy_friends_02","name":"첨벙","description":"큰 장화를 신은 오리","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":2,"rarity":"common","rarity_name":"일반","image":"images/rainy_friends/rainy_friends_02.png"},{"id":"rainy_friends_03","name":"또르","description":"빗방울을 안은 고양이","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":3,"rarity":"common","rarity_name":"일반","image":"images/rainy_friends/rainy_friends_03.png"},{"id":"rainy_friends_04","name":"리프","description":"잎사귀 우산을 든 개구리","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":4,"rarity":"common","rarity_name":"일반","image":"images/rainy_friends/rainy_friends_04.png"},{"id":"rainy_friends_05","name":"포포","description":"우산을 든 강아지","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":5,"rarity":"common","rarity_name":"일반","image":"images/rainy_friends/rainy_friends_05.png"},{"id":"rainy_friends_06","name":"방울","description":"물웅덩이에서 노는 토끼","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":6,"rarity":"rare","rarity_name":"레어","image":"images/rainy_friends/rainy_friends_06.png"},{"id":"rainy_friends_07","name":"도치","description":"비 모자를 쓴 고슴도치","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":7,"rarity":"rare","rarity_name":"레어","image":"images/rainy_friends/rainy_friends_07.png"},{"id":"rainy_friends_08","name":"코코","description":"따뜻한 코코아를 든 펭귄","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":8,"rarity":"rare","rarity_name":"레어","image":"images/rainy_friends/rainy_friends_08.png"},{"id":"rainy_friends_09","name":"레인","description":"무지개 우산의 비 요정","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":9,"rarity":"secret","rarity_name":"시크릿","image":"images/rainy_friends/rainy_friends_09.png"},{"id":"rainy_friends_10","name":"뭉게","description":"별을 안은 구름 곰","theme_id":"rainy_friends","theme_name":"비 오는 날의 친구들","number":10,"rarity":"secret","rarity_name":"시크릿","image":"images/rainy_friends/rainy_friends_10.png"},{"id":"dessert_magic_01","name":"푸딩","description":"별 지팡이를 든 푸딩 마법사","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":1,"rarity":"common","rarity_name":"일반","image":"images/dessert_magic/dessert_magic_01.png"},{"id":"dessert_magic_02","name":"까누","description":"숟가락 검을 든 까눌레 기사","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":2,"rarity":"common","rarity_name":"일반","image":"images/dessert_magic/dessert_magic_02.png"},{"id":"dessert_magic_03","name":"마카","description":"묘약을 만드는 마카롱 연금술사","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":3,"rarity":"common","rarity_name":"일반","image":"images/dessert_magic/dessert_magic_03.png"},{"id":"dessert_magic_04","name":"베리","description":"딸기 케이크 마녀","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":4,"rarity":"common","rarity_name":"일반","image":"images/dessert_magic/dessert_magic_04.png"},{"id":"dessert_magic_05","name":"슈슈","description":"생크림 공방의 슈 견습생","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":5,"rarity":"common","rarity_name":"일반","image":"images/dessert_magic/dessert_magic_05.png"},{"id":"dessert_magic_06","name":"티라","description":"마법책을 든 티라미수 부엉이","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":6,"rarity":"rare","rarity_name":"레어","image":"images/dessert_magic/dessert_magic_06.png"},{"id":"dessert_magic_07","name":"민티","description":"거품기를 든 민트 용 요리사","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":7,"rarity":"rare","rarity_name":"레어","image":"images/dessert_magic/dessert_magic_07.png"},{"id":"dessert_magic_08","name":"쿠키","description":"쿠키 공방의 든든한 골렘","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":8,"rarity":"rare","rarity_name":"레어","image":"images/dessert_magic/dessert_magic_08.png"},{"id":"dessert_magic_09","name":"슈가","description":"설탕 결정의 요정","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":9,"rarity":"secret","rarity_name":"시크릿","image":"images/dessert_magic/dessert_magic_09.png"},{"id":"dessert_magic_10","name":"카카오","description":"한밤의 초콜릿 마법사","theme_id":"dessert_magic","theme_name":"마법 디저트 공방","number":10,"rarity":"secret","rarity_name":"시크릿","image":"images/dessert_magic/dessert_magic_10.png"},{"id":"secret_garden_01","name":"이끼","description":"이끼 망토를 두른 곰","theme_id":"secret_garden","theme_name":"비밀의 정원","number":1,"rarity":"common","rarity_name":"일반","image":"images/secret_garden/secret_garden_01.png"},{"id":"secret_garden_02","name":"버섯","description":"버섯 모자를 쓴 여우","theme_id":"secret_garden","theme_name":"비밀의 정원","number":2,"rarity":"common","rarity_name":"일반","image":"images/secret_garden/secret_garden_02.png"},{"id":"secret_garden_03","name":"벨라","description":"은방울꽃을 안은 토끼","theme_id":"secret_garden","theme_name":"비밀의 정원","number":3,"rarity":"common","rarity_name":"일반","image":"images/secret_garden/secret_garden_03.png"},{"id":"secret_garden_04","name":"다육","description":"작은 화분을 든 고슴도치","theme_id":"secret_garden","theme_name":"비밀의 정원","number":4,"rarity":"common","rarity_name":"일반","image":"images/secret_garden/secret_garden_04.png"},{"id":"secret_garden_05","name":"수국","description":"수국으로 꾸민 고양이","theme_id":"secret_garden","theme_name":"비밀의 정원","number":5,"rarity":"common","rarity_name":"일반","image":"images/secret_garden/secret_garden_05.png"},{"id":"secret_garden_06","name":"토리","description":"도토리를 모으는 다람쥐","theme_id":"secret_garden","theme_name":"비밀의 정원","number":6,"rarity":"rare","rarity_name":"레어","image":"images/secret_garden/secret_garden_06.png"},{"id":"secret_garden_07","name":"온실","description":"온실을 등에 진 달팽이","theme_id":"secret_garden","theme_name":"비밀의 정원","number":7,"rarity":"rare","rarity_name":"레어","image":"images/secret_garden/secret_garden_07.png"},{"id":"secret_garden_08","name":"튤리","description":"튤립 사이에서 잠든 생쥐","theme_id":"secret_garden","theme_name":"비밀의 정원","number":8,"rarity":"rare","rarity_name":"레어","image":"images/secret_garden/secret_garden_08.png"},{"id":"secret_garden_09","name":"듀이","description":"이슬 장식을 단 사슴","theme_id":"secret_garden","theme_name":"비밀의 정원","number":9,"rarity":"secret","rarity_name":"시크릿","image":"images/secret_garden/secret_garden_09.png"},{"id":"secret_garden_10","name":"문플라워","description":"달꽃의 정원 요정","theme_id":"secret_garden","theme_name":"비밀의 정원","number":10,"rarity":"secret","rarity_name":"시크릿","image":"images/secret_garden/secret_garden_10.png"}];
+const RARITY_WEIGHTS = {secret:7, rare:28, common:65}; /* 확률(%) 합 100, 유료 요소 없음 — 필요시 이 값만 조정 */
+const STARS_PER_DRAW = 3; /* 별 3개마다 뽑기 1회 지급 */
+
+function collectionThemes(){
+  const order=[], names={};
+  COLLECTIBLES.forEach(c=>{ if(!(c.theme_id in names)){ names[c.theme_id]=c.theme_name; order.push(c.theme_id); } });
+  return order.map(id=>({id, name:names[id]}));
 }
-function figureHtml(id){
-  const face = `<div class="f-face"><span class="f-eye"></span><span class="f-eye"></span><i class="f-mouth"></i></div>`;
-  switch(id){
-    case "chick": return `<div class="figure fig-chick"><div class="f-body"></div><span class="f-wing l"></span><span class="f-wing r"></span><span class="f-beak"></span>${face}</div>`;
-    case "bunny": return `<div class="figure fig-bunny"><div class="f-body"></div><span class="f-ear l"><i></i></span><span class="f-ear r"><i></i></span>${face}</div>`;
-    case "cat": return `<div class="figure fig-cat"><div class="f-body"></div><span class="f-ear l"></span><span class="f-ear r"></span>${face}</div>`;
-    case "star": return `<div class="figure fig-star"><div class="f-body"></div>${face}</div>`;
-    case "cloud": return `<div class="figure fig-cloud"><span class="f-puff l"></span><span class="f-puff r"></span><div class="f-body"></div>${face}</div>`;
-    case "butterfly": return `<div class="figure fig-butterfly"><span class="f-wing tl"></span><span class="f-wing tr"></span><span class="f-wing bl"></span><span class="f-wing br"></span><div class="f-body"></div>${face}</div>`;
-    default: return "";
-  }
+function pickRandomDraw(){
+  const roll = Math.random()*100;
+  const rarity = roll<RARITY_WEIGHTS.secret ? "secret" : roll<RARITY_WEIGHTS.secret+RARITY_WEIGHTS.rare ? "rare" : "common";
+  const pool = COLLECTIBLES.filter(c=>c.rarity===rarity);
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function doDraw(){
+  const item = pickRandomDraw();
+  if(!store.collection) store.collection={};
+  const isNew = !store.collection[item.id];
+  store.collection[item.id] = (store.collection[item.id]||0)+1;
+  return {item, isNew};
+}
+if(_isPreCollectionSave){
+  /* 새 수집 기능을 처음 적용하는 시점: 이미 쌓인 별만큼 조용히 소급 지급(팝업 없이)해서
+     기존 진도·보상 기록을 그대로 보존하고 갑자기 팝업이 쏟아지지 않게 한다 */
+  const s0 = starCount();
+  const n = Math.floor(s0/STARS_PER_DRAW);
+  for(let i=0;i<n;i++) doDraw();
+  store.drawsGranted = n;
+  store.collectionSeen = Object.keys(store.collection||{});
+  save();
 }
 function mascotInner(){
   return `<div class="m-leaf l"></div><div class="m-leaf r"></div>
@@ -788,52 +764,61 @@ function refreshHomeMascot(){
   const el=document.getElementById("homeMascot");
   if(el) el.innerHTML = mascotInner();
 }
-function checkFigureUnlocks(){
+function checkCollectionDraws(){
   const stars = starCount();
-  const prev = store.lastCelebratedStars||0;
-  if(stars<=prev) return;
-  const newly = FIGURES.filter(a=>a.cost>prev && a.cost<=stars);
-  store.lastCelebratedStars = stars;
+  const target = Math.floor(stars/STARS_PER_DRAW);
+  const granted = store.drawsGranted||0;
+  if(target<=granted) return;
+  const pending = target-granted;
+  store.drawsGranted = target;
+  const results=[];
+  for(let i=0;i<pending;i++) results.push(doDraw());
   save();
-  if(newly.length) showUnlockPopup(newly);
+  if(results.length) showDrawPopup(results);
 }
-function showUnlockPopup(items){
-  confetti(20); sfxWin();
+function showDrawPopup(results){
+  confetti(results.some(r=>r.item.rarity!=="common")?30:16);
+  sfxWin();
   const ov=document.createElement("div");
   ov.className="unlock-overlay";
-  ov.innerHTML = `
-    <div class="unlock-card">
-      <div style="font-size:38px">🎉</div>
-      <h3>새 친구가 나타났어요!</h3>
-      <p class="sub">피규어 수집함에서 만나 보세요</p>
-      <div class="unlock-items">
-        ${items.map(a=>`
-          <div class="unlock-item">
-            <div class="fig-preview">${figureHtml(a.id)}</div>
-            <span class="name">${a.name}</span>
-          </div>`).join("")}
-      </div>
-      <div class="row-btns">
-        <button class="btn gray small" data-act="close">나중에</button>
-        <button class="btn pink small" data-act="go">지금 구경하기</button>
-      </div>
-    </div>`;
   document.body.appendChild(ov);
-  ov.querySelector('[data-act="close"]').onclick=()=>ov.remove();
-  ov.querySelector('[data-act="go"]').onclick=()=>{ ov.remove(); renderFiguresScreen(); show("figures"); };
+  let idx=0;
+  function renderOne(){
+    const {item,isNew}=results[idx];
+    const icon = item.rarity==="secret"?"✨":item.rarity==="rare"?"🌟":"🎉";
+    ov.innerHTML = `
+      <div class="unlock-card">
+        <div style="font-size:30px">${icon}</div>
+        <h3>${isNew?"새 친구를 뽑았어요!":"또 만났어요!"}</h3>
+        <p class="sub">${item.theme_name} · <span class="coll-rarity ${item.rarity}">${item.rarity_name}</span></p>
+        <img class="coll-reveal-img${item.rarity==="secret"?" secret-glow":""}" src="${item.image}" alt="${item.name}">
+        <div style="font-weight:800; font-size:17px">${item.name}</div>
+        <p class="sub">${item.description}${!isNew?` · 중복 획득 ×${store.collection[item.id]}`:""}</p>
+        <div class="row-btns">
+          ${results.length>1?`<span style="font-size:12.5px;color:#8a94a6">${idx+1}/${results.length}</span>`:""}
+          <button class="btn pink small" data-act="next">${idx<results.length-1?"다음":"도감 보기"}</button>
+        </div>
+      </div>`;
+    ov.querySelector('[data-act="next"]').onclick=()=>{
+      idx++;
+      if(idx<results.length) renderOne();
+      else { ov.remove(); renderFiguresScreen(); show("figures"); }
+    };
+  }
+  renderOne();
   ov.addEventListener("click", e=>{ if(e.target===ov) ov.remove(); });
 }
-function showFigureDetail(a){
+function showItemDetail(c){
+  const qty = (store.collection&&store.collection[c.id])||0;
   const ov=document.createElement("div");
   ov.className="unlock-overlay";
   ov.innerHTML = `
     <div class="unlock-card">
-      <div class="fig-preview pop" style="width:96px; height:96px; margin:0 auto 10px">${figureHtml(a.id)}</div>
-      <h3>${a.name}</h3>
-      <p class="sub">${a.blurb}</p>
-      <div class="row-btns">
-        <button class="btn pink small" data-act="close">좋아요!</button>
-      </div>
+      <img class="coll-reveal-img${c.rarity==="secret"?" secret-glow":""}" src="${c.image}" alt="${c.name}">
+      <h3>${c.name}</h3>
+      <p class="sub">${c.theme_name} · <span class="coll-rarity ${c.rarity}">${c.rarity_name}</span>${qty>1?` · 보유 ×${qty}`:""}</p>
+      <p class="sub">${c.description}</p>
+      <div class="row-btns"><button class="btn pink small" data-act="close">좋아요!</button></div>
     </div>`;
   document.body.appendChild(ov);
   beep(740, .1);
@@ -842,33 +827,44 @@ function showFigureDetail(a){
 }
 function renderFiguresScreen(){
   const stars = starCount();
-  const unlockedCount = FIGURES.filter(a=>stars>=a.cost).length;
-  const nextLocked = FIGURES.filter(a=>stars<a.cost).sort((a,b)=>a.cost-b.cost)[0];
-  const gaugeHtml = nextLocked
-    ? `<div class="fig-gauge"><div class="fig-gauge-fill" style="width:${Math.min(100, stars/nextLocked.cost*100)}%"></div></div>
-       <div class="fig-next-hint">⭐${nextLocked.cost-stars}개만 더 모으면 "${nextLocked.name}" 친구가 나타나요!</div>`
-    : `<div class="fig-next-hint">🎉 친구를 모두 모았어요!</div>`;
+  const owned = Object.keys(store.collection||{}).length;
+  const nextTarget = (store.drawsGranted||0)+1;
+  const remain = Math.max(0, nextTarget*STARS_PER_DRAW - stars);
+  const progressInStage = STARS_PER_DRAW - remain;
+  const gaugeHtml = `<div class="fig-gauge"><div class="fig-gauge-fill" style="width:${Math.min(100, progressInStage/STARS_PER_DRAW*100)}%"></div></div>
+     <div class="fig-next-hint">${remain>0?`⭐${remain}개만 더 모으면 친구를 뽑아요!`:"뽑을 준비가 됐어요!"}</div>`;
   document.getElementById("figuresProgress").innerHTML =
-    `${unlockedCount}/${FIGURES.length}개 모았어요! (⭐${stars})${gaugeHtml}`;
-  const grid = document.getElementById("figuresGrid");
-  grid.innerHTML = "";
-  const seenNow = new Set(store.figuresSeen||[]);
-  FIGURES.forEach(a=>{
-    const unlocked = stars>=a.cost;
-    const isNew = unlocked && !seenNow.has(a.id);
-    const btn=document.createElement("button");
-    btn.className="fig-item"+(unlocked?" got":" locked");
-    btn.innerHTML = unlocked
-      ? `${isNew?'<span class="fig-new">NEW</span>':""}<div class="fig-preview">${figureHtml(a.id)}</div><span class="fig-name">${a.name}</span>`
-      : `<div class="fig-preview locked-dim">${figureHtml(a.id)}</div><span class="fig-name">🔒 ⭐${a.cost}</span>`;
-    if(unlocked){
-      btn.onclick=()=>{ showFigureDetail(a); };
-    }
-    grid.appendChild(btn);
+    `${owned}/${COLLECTIBLES.length}개 모았어요! (⭐${stars})${gaugeHtml}`;
+  const wrap = document.getElementById("figuresGrid");
+  wrap.innerHTML = "";
+  const seenNow = new Set(store.collectionSeen||[]);
+  collectionThemes().forEach(theme=>{
+    const items = COLLECTIBLES.filter(c=>c.theme_id===theme.id).sort((a,b)=>a.number-b.number);
+    const gotCount = items.filter(c=>store.collection&&store.collection[c.id]).length;
+    const section=document.createElement("div");
+    section.className="panel coll-theme";
+    section.innerHTML = `<h4>${theme.name} <span class="theme-count">${gotCount}/${items.length}</span></h4><div class="coll-grid"></div>`;
+    const grid = section.querySelector(".coll-grid");
+    items.forEach(c=>{
+      const qty = (store.collection&&store.collection[c.id])||0;
+      const got = qty>0;
+      const isNew = got && !seenNow.has(c.id);
+      const cell=document.createElement("div");
+      cell.className="coll-item"+(got?" got":"");
+      cell.innerHTML = `
+        ${isNew?'<span class="fig-new">NEW</span>':""}
+        ${qty>1?`<span class="coll-qty">×${qty}</span>`:""}
+        <img src="${c.image}" alt="${got?c.name:"?"}" class="${got?"":"locked"}">
+        <span class="coll-name">${got?c.name:"？？？"}</span>
+        <span class="coll-rarity ${got?c.rarity:""}">${got?c.rarity_name:"🔒"}</span>`;
+      if(got){ cell.style.cursor="pointer"; cell.onclick=()=>showItemDetail(c); }
+      grid.appendChild(cell);
+    });
+    wrap.appendChild(section);
   });
-  if(!store.figuresSeen) store.figuresSeen=[];
+  if(!store.collectionSeen) store.collectionSeen=[];
   let seenChanged=false;
-  FIGURES.forEach(a=>{ if(stars>=a.cost && !store.figuresSeen.includes(a.id)){ store.figuresSeen.push(a.id); seenChanged=true; } });
+  Object.keys(store.collection||{}).forEach(id=>{ if(!store.collectionSeen.includes(id)){ store.collectionSeen.push(id); seenChanged=true; } });
   if(seenChanged) save();
 }
 
@@ -879,10 +875,10 @@ function refreshBadges(){
   document.getElementById("badgeGame").textContent = store.gameBestMoves>0?("최소 "+store.gameBestMoves+"번"):"기록 없음";
   document.getElementById("badgeBlend").textContent = Object.keys(store.blendDone).length+"단어";
   document.getElementById("badgeChunk").textContent = Object.keys(store.chunkDone).length+"단어";
-  document.getElementById("badgeFigures").textContent = FIGURES.filter(a=>starCount()>=a.cost).length+"/"+FIGURES.length+"개";
+  document.getElementById("badgeFigures").textContent = Object.keys(store.collection||{}).length+"/"+COLLECTIBLES.length+"개";
   document.getElementById("starTotal").textContent = starCount();
-  checkFigureUnlocks();
-  const figNew = FIGURES.some(a=>starCount()>=a.cost && !(store.figuresSeen||[]).includes(a.id));
+  checkCollectionDraws();
+  const figNew = Object.keys(store.collection||{}).some(id=>!(store.collectionSeen||[]).includes(id));
   document.getElementById("figNewDot").hidden = !figNew;
   renderWeekStamp();
   refreshHomeMascot();
