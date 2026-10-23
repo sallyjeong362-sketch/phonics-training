@@ -173,72 +173,70 @@
   @keyframes mascotCheer{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-12px) scale(1.04);}}
   .mascot.cheer .m-arm.l{transform:rotate(-130deg);}
   .mascot.cheer .m-arm.r{transform:rotate(130deg);}
-  .mascot.pop{animation:mascotPop .4s ease;}
+  .pop{animation:mascotPop .4s ease;}
   @keyframes mascotPop{0%{transform:scale(1);}45%{transform:scale(1.14) rotate(-4deg);}100%{transform:scale(1);}}
 
-  /* ── 쑥쑥이 꾸미기(악세서리) ────────── */
-  .acc-progress{font-weight:800; font-size:15px; margin-bottom:12px; text-align:center;}
-  .acc-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:12px;}
-  .acc-item{
+  /* ── 피규어 수집 ────────────────────── */
+  .fig-progress{font-weight:800; font-size:15px; margin-bottom:12px; text-align:center;}
+  .fig-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:12px;}
+  .fig-item{
     background:#fff; border:3px solid #e3e2ef; border-radius:16px; padding:10px 6px;
     display:flex; flex-direction:column; align-items:center; gap:6px; position:relative;
   }
-  .acc-item .acc-preview{width:56px; height:56px; position:relative;}
-  .acc-item .acc-name{font-size:12px; font-weight:800; color:#5f6c7b; text-align:center;}
-  .acc-item.equipped{border-color:var(--accent-purple); background:linear-gradient(160deg,#fff,#f3eaff); box-shadow:0 3px 8px rgba(139,92,246,.2);}
-  .acc-item.locked{opacity:.55;}
-  .acc-item .acc-check{
-    position:absolute; top:6px; right:8px; background:var(--accent-purple); color:#fff;
-    width:18px; height:18px; border-radius:50%; font-size:11px; display:flex; align-items:center; justify-content:center;
-  }
-  .acc-item .locked-dim{filter:grayscale(1) opacity(.5);}
-  .acc-item .acc-new{
+  .fig-item .fig-preview{width:56px; height:56px; position:relative;}
+  .fig-item .fig-name{font-size:12px; font-weight:800; color:#5f6c7b; text-align:center;}
+  .fig-item.got{border-color:var(--accent-purple); background:linear-gradient(160deg,#fff,#f3eaff); box-shadow:0 3px 8px rgba(139,92,246,.2);}
+  .fig-item.locked{opacity:.55;}
+  .fig-item .locked-dim{filter:grayscale(1) opacity(.5);}
+  .fig-item .fig-new{
     position:absolute; top:-7px; left:8px; background:var(--red); color:#fff;
     font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; z-index:3;
     animation:newPulse 1.2s ease-in-out infinite;
   }
-  .acc-gauge{background:#eef0f6; border-radius:999px; height:12px; overflow:hidden; margin:10px 0 4px;}
-  .acc-gauge-fill{height:100%; background:linear-gradient(90deg,var(--accent-purple),var(--accent-pink)); border-radius:999px; transition:width .4s ease;}
-  .acc-next-hint{font-size:12.5px; color:#8a94a6; font-weight:700; text-align:center; margin-top:2px;}
+  .fig-gauge{background:#eef0f6; border-radius:999px; height:12px; overflow:hidden; margin:10px 0 4px;}
+  .fig-gauge-fill{height:100%; background:linear-gradient(90deg,var(--accent-purple),var(--accent-pink)); border-radius:999px; transition:width .4s ease;}
+  .fig-next-hint{font-size:12.5px; color:#8a94a6; font-weight:700; text-align:center; margin-top:2px;}
 
-  /* 악세서리 도형(퍼센트 기반 — 마스코트/프리뷰 어디서든 재사용) */
-  .acc-flower{position:absolute; top:-6%; left:28%; width:30%; height:30%; z-index:4;}
-  .acc-flower span{position:absolute; width:46%; height:46%; background:#ff8fb3; border-radius:50%;}
-  .acc-flower span:nth-child(1){top:0; left:27%;}
-  .acc-flower span:nth-child(2){top:27%; left:0;}
-  .acc-flower span:nth-child(3){top:27%; left:54%;}
-  .acc-flower span:nth-child(4){top:54%; left:27%;}
-  .acc-flower i{position:absolute; top:27%; left:27%; width:46%; height:46%; background:#ffd76a; border-radius:50%;}
+  /* 피규어 캐릭터 — 마스코트에 덧입히지 않는 독립형 캐릭터. 각자 자기 박스(.figure) 안에서만
+     퍼센트 기준으로 그려지므로, 바깥 레이아웃(히어로 배너 등) 높이 변화에 영향받지 않는다. */
+  .figure{position:relative; width:100%; height:100%;}
+  .figure .f-body{position:absolute; left:10%; top:14%; width:80%; height:78%; border-radius:50% 50% 46% 46%/58% 58% 42% 42%;}
+  .figure .f-face{position:absolute; left:50%; top:30%; width:58%; transform:translateX(-50%); text-align:center; z-index:3;}
+  .figure .f-eye{display:inline-block; width:14%; aspect-ratio:1; background:#2a1b33; border-radius:50%; margin:0 8%;}
+  .figure .f-mouth{display:block; width:28%; aspect-ratio:2/1; margin:5% auto 0; border-bottom:3px solid #2a1b33; border-radius:0 0 50% 50%;}
 
-  .acc-bow{position:absolute; top:56%; left:50%; width:30%; height:16%; transform:translateX(-50%); z-index:4;}
-  .acc-bow .wing{position:absolute; top:0; width:45%; height:100%; background:#8b5cf6;}
-  .acc-bow .wing.l{left:0; clip-path:polygon(0 50%, 100% 0, 100% 100%);}
-  .acc-bow .wing.r{right:0; clip-path:polygon(100% 50%, 0 0, 0 100%);}
-  .acc-bow .knot{position:absolute; left:50%; top:20%; width:14%; height:60%; background:#6d28d9; border-radius:3px; transform:translateX(-50%);}
+  .fig-chick .f-body{background:linear-gradient(160deg,#fff6a8,#ffd84d);}
+  .fig-chick .f-wing{position:absolute; top:52%; width:22%; height:28%; background:#ffcb3d; border-radius:50% 50% 50% 10%;}
+  .fig-chick .f-wing.l{left:2%; transform:rotate(-10deg);}
+  .fig-chick .f-wing.r{right:2%; transform:rotate(10deg) scaleX(-1);}
+  .fig-chick .f-beak{position:absolute; left:50%; top:46%; width:14%; height:10%; background:#ff9d3d; clip-path:polygon(0 0,100% 20%,0 100%); transform:translateX(-50%);}
 
-  .acc-glasses{
-    position:absolute; left:50%; top:29%; width:60%; height:14%; transform:translateX(-50%); z-index:5;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .acc-glasses .lens{width:38%; height:100%; border:3px solid #333; border-radius:50%; background:rgba(255,255,255,.25); box-sizing:border-box;}
-  .acc-glasses .bridge{position:absolute; left:50%; top:50%; width:16%; height:3px; background:#333; transform:translate(-50%,-50%);}
+  .fig-bunny .f-body{background:linear-gradient(160deg,#fffdf7,#ffeef5);}
+  .fig-bunny .f-ear{position:absolute; top:-30%; width:20%; height:48%; background:#fff6fa; border:2px solid #ffd9e6; border-radius:50%/60% 60% 40% 40%;}
+  .fig-bunny .f-ear.l{left:16%; transform:rotate(-12deg);}
+  .fig-bunny .f-ear.r{right:16%; transform:rotate(12deg);}
+  .fig-bunny .f-ear i{position:absolute; left:50%; top:30%; width:50%; height:50%; background:#ffb3c6; border-radius:50%; transform:translateX(-50%);}
 
-  .acc-hat{
-    position:absolute; top:-32%; left:50%; width:34%; height:36%; transform:translateX(-50%); z-index:6;
-    clip-path:polygon(50% 0%, 5% 100%, 95% 100%); background:linear-gradient(160deg,#fca5f1,#c084fc);
-  }
-  .acc-hat .pompom{position:absolute; top:-10%; left:50%; width:30%; aspect-ratio:1; background:#fff; border-radius:50%; transform:translateX(-50%);}
+  .fig-cat .f-body{background:linear-gradient(160deg,#ffe3b0,#ffc478);}
+  .fig-cat .f-ear{position:absolute; top:-14%; width:26%; height:30%; background:#ffc478; clip-path:polygon(50% 0,0 100%,100% 100%);}
+  .fig-cat .f-ear.l{left:10%; transform:rotate(-8deg);}
+  .fig-cat .f-ear.r{right:10%; transform:rotate(8deg);}
 
-  .acc-crown{
-    position:absolute; top:-20%; left:50%; width:40%; height:22%; transform:translateX(-50%); z-index:6;
-    background:linear-gradient(160deg,#ffe27a,#ffc24b);
-    clip-path:polygon(0% 100%, 0% 40%, 20% 70%, 35% 20%, 50% 60%, 65% 20%, 80% 70%, 100% 40%, 100% 100%);
+  .fig-star .f-body{
+    background:linear-gradient(160deg,#fff2a8,#ffd54f);
+    clip-path:polygon(50% 0%,64% 34%,100% 36%,72% 58%,82% 92%,50% 70%,18% 92%,28% 58%,0% 36%,36% 34%);
   }
 
-  .acc-wings{position:absolute; top:40%; left:50%; width:140%; height:44%; transform:translateX(-50%); z-index:1;}
-  .acc-wings .wing{position:absolute; top:0; width:38%; height:100%; background:rgba(255,255,255,.6); border:2px solid rgba(255,255,255,.85);}
-  .acc-wings .wing.l{left:0; border-radius:100% 0% 60% 40%/100% 0% 100% 0%; transform:rotate(-12deg);}
-  .acc-wings .wing.r{right:0; border-radius:0% 100% 40% 60%/0% 100% 0% 100%; transform:rotate(12deg);}
+  .fig-cloud .f-body{background:linear-gradient(160deg,#ffffff,#eef1ff); border-radius:50%;}
+  .fig-cloud .f-puff{position:absolute; bottom:24%; width:40%; height:40%; background:#fff; border-radius:50%;}
+  .fig-cloud .f-puff.l{left:-6%;} .fig-cloud .f-puff.r{right:-6%;}
+
+  .fig-butterfly .f-body{left:42%; width:16%; background:linear-gradient(160deg,#6d5a8f,#4b3b6b);}
+  .fig-butterfly .f-wing{position:absolute; top:6%; width:42%; height:44%;}
+  .fig-butterfly .f-wing.tl{left:4%; background:linear-gradient(160deg,#ff9fc4,#ff6fa5); border-radius:100% 10% 100% 0%;}
+  .fig-butterfly .f-wing.tr{right:4%; background:linear-gradient(160deg,#9fd9ff,#5fb4ff); border-radius:10% 100% 0% 100%;}
+  .fig-butterfly .f-wing.bl{left:10%; top:46%; width:30%; height:32%; background:linear-gradient(160deg,#ffd27f,#ffb64f); border-radius:100% 10% 100% 0%;}
+  .fig-butterfly .f-wing.br{right:10%; top:46%; width:30%; height:32%; background:linear-gradient(160deg,#c6ff9f,#92e36a); border-radius:10% 100% 0% 100%;}
 
   /* ── 아이템 획득 팝업 ───────────────── */
   .unlock-overlay{
@@ -256,7 +254,7 @@
   .unlock-card .sub{margin:0 0 6px; font-size:13px; color:#5f6c7b;}
   .unlock-items{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:16px 0;}
   .unlock-item{display:flex; flex-direction:column; align-items:center; gap:6px;}
-  .unlock-item .acc-preview{width:64px; height:64px; position:relative; background:#f8f6ff; border-radius:16px;}
+  .unlock-item .fig-preview{width:64px; height:64px; position:relative; background:#f8f6ff; border-radius:16px;}
   .unlock-item .name{font-size:12.5px; font-weight:800; color:#5f6c7b;}
   .unlock-card .row-btns{display:flex; gap:8px; margin-top:6px;}
   .unlock-card .row-btns .btn{flex:1;}
@@ -498,31 +496,27 @@
         <p>in·for·ma·tion처럼 긴 단어를 덩어리(chunk)로 잘라 읽는 법을 배워요.</p>
         <span class="badge" id="badgeChunk">0단어</span>
       </button>
-      <button class="menu-card" data-go="dressup">
-        <span class="new-dot" id="dressNewDot" hidden>NEW</span>
-        <span class="step-tag">꾸미기</span>
-        <div class="emoji">👒</div>
-        <h3>쑥쑥이 꾸미기</h3>
-        <p>별을 모아서 모자·안경·날개 같은 아이템으로 쑥쑥이를 꾸며 보세요!</p>
-        <span class="badge" id="badgeDress">0/6개</span>
+      <button class="menu-card" data-go="figures">
+        <span class="new-dot" id="figNewDot" hidden>NEW</span>
+        <span class="step-tag">수집</span>
+        <div class="emoji">🐣</div>
+        <h3>피규어 수집</h3>
+        <p>별을 모아서 쑥쑥이의 귀여운 친구들을 하나씩 모아 보세요!</p>
+        <span class="badge" id="badgeFigures">0/6개</span>
       </button>
     </div>
     <p class="hint-text" style="margin-top:14px">🔈 소리가 안 나면 기기의 무음 모드를 해제해 주세요. 영어 발음은 기기에 내장된 음성으로 재생됩니다.</p>
   </section>
 
-  <!-- ═══════════ 쑥쑥이 꾸미기 ═══════════ -->
-  <section class="screen" id="scr-dressup">
+  <!-- ═══════════ 피규어 수집 ═══════════ -->
+  <section class="screen" id="scr-figures">
     <div class="panel" style="text-align:center">
-      <h3 class="section-title" style="justify-content:center">👒 쑥쑥이 꾸미기</h3>
-      <p class="hint-text">별을 모을수록 새 아이템이 열려요. 탭해서 입히고 벗겨 보세요!</p>
-      <div id="dressupPreview" style="margin:14px 0"></div>
-      <div class="row" style="justify-content:center">
-        <button class="btn gray small" id="btnDressupReset">🧺 기본으로</button>
-      </div>
+      <h3 class="section-title" style="justify-content:center">🐣 피규어 수집</h3>
+      <p class="hint-text">별을 모을수록 새 친구가 나타나요. 탭해서 구경해 보세요!</p>
     </div>
     <div class="panel">
-      <div class="acc-progress" id="dressupProgress">0/6개 모았어요!</div>
-      <div class="acc-grid" id="dressupGrid"></div>
+      <div class="fig-progress" id="figuresProgress">0/6개 모았어요!</div>
+      <div class="fig-grid" id="figuresGrid"></div>
     </div>
   </section>
 
@@ -665,9 +659,9 @@
 const STORE_KEY = "phonicsApp.v1";
 let _rawSaved = {};
 try { _rawSaved = JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); } catch(e){}
-let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[], equippedAcc:{}, accSeen:[], lastCelebratedStars:0 };
+let store = { trace:{}, testBest:-1, gameBestMoves:-1, blendDone:{}, chunkDone:{}, krHint:true, visitDates:[], figuresSeen:[], lastCelebratedStars:0 };
 store = Object.assign(store, _rawSaved);
-const _isPreUnlockSave = !("accSeen" in _rawSaved);
+const _isPreUnlockSave = !("figuresSeen" in _rawSaved);
 function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
 
 /* ── 음성 (Web Speech API) ── */
@@ -728,7 +722,7 @@ function confetti(n=24){
 
 /* ── 화면 전환 ── */
 const TITLES={home:"소리쑥쑥 파닉스", trace:"✏️ 알파벳 따라쓰기", test:"🔍 대문자·소문자 테스트",
-  game:"🃏 짝꿍 카드 게임", blend:"🔊 소리 합치기", chunk:"🧩 청크 읽기", play:"🔊 소리 합치기", dressup:"👒 쑥쑥이 꾸미기"};
+  game:"🃏 짝꿍 카드 게임", blend:"🔊 소리 합치기", chunk:"🧩 청크 읽기", play:"🔊 소리 합치기", figures:"🐣 피규어 수집"};
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("scr-"+id).classList.add("active");
@@ -741,7 +735,7 @@ document.querySelectorAll(".menu-card").forEach(c=>c.onclick=()=>{
   if(go==="trace") initTraceScreen();
   if(go==="blend") renderLevelList("blend");
   if(go==="chunk") renderLevelList("chunk");
-  if(go==="dressup") renderDressupScreen();
+  if(go==="figures") renderFiguresScreen();
   show(go);
 });
 
@@ -754,38 +748,36 @@ function starCount(){
   s += Object.keys(store.blendDone).length + Object.keys(store.chunkDone).length;
   return s;
 }
-/* ── 쑥쑥이 꾸미기(악세서리) ── */
-const ACCESSORIES = [
-  {id:"flower", slot:"head", name:"꽃 머리띠", cost:0},
-  {id:"bow", slot:"neck", name:"리본 보타이", cost:5},
-  {id:"glasses", slot:"face", name:"동그란 안경", cost:10},
-  {id:"hat", slot:"head", name:"고깔모자", cost:20},
-  {id:"crown", slot:"head", name:"반짝 왕관", cost:35},
-  {id:"wings", slot:"back", name:"요정 날개", cost:50}
+/* ── 피규어 수집 ── */
+const FIGURES = [
+  {id:"chick", name:"삐약이", cost:0, blurb:"가장 먼저 알을 깨고 나온 친구예요!"},
+  {id:"bunny", name:"토실이", cost:5, blurb:"깡총깡총, 귀가 아주 길어요."},
+  {id:"cat", name:"냥냥이", cost:10, blurb:"소리 연습을 제일 좋아하는 친구예요."},
+  {id:"star", name:"반짝이", cost:20, blurb:"열심히 할 때마다 반짝반짝 빛나요."},
+  {id:"cloud", name:"몽글이", cost:35, blurb:"폭신폭신, 하늘에서 내려왔어요."},
+  {id:"butterfly", name:"나풀이", cost:50, blurb:"제일 늦게 날아온 신비한 친구예요."}
 ];
 if(_isPreUnlockSave){
-  /* 이미 모은 아이템은 새로 "획득!" 팝업을 띄우지 않도록, 처음 한 번만 조용히 기록 */
+  /* 이미 모은 친구는 새로 "획득!" 팝업을 띄우지 않도록, 처음 한 번만 조용히 기록 */
   const s0 = starCount();
-  store.accSeen = ACCESSORIES.filter(a=>s0>=a.cost).map(a=>a.id);
+  store.figuresSeen = FIGURES.filter(a=>s0>=a.cost).map(a=>a.id);
   store.lastCelebratedStars = s0;
   save();
 }
-function accessoryPartHtml(id){
+function figureHtml(id){
+  const face = `<div class="f-face"><span class="f-eye"></span><span class="f-eye"></span><i class="f-mouth"></i></div>`;
   switch(id){
-    case "flower": return `<div class="acc acc-flower"><span></span><span></span><span></span><span></span><i></i></div>`;
-    case "bow": return `<div class="acc acc-bow"><span class="wing l"></span><span class="wing r"></span><span class="knot"></span></div>`;
-    case "glasses": return `<div class="acc acc-glasses"><span class="lens l"></span><span class="lens r"></span><span class="bridge"></span></div>`;
-    case "hat": return `<div class="acc acc-hat"><span class="pompom"></span></div>`;
-    case "crown": return `<div class="acc acc-crown"></div>`;
-    case "wings": return `<div class="acc acc-wings"><span class="wing l"></span><span class="wing r"></span></div>`;
+    case "chick": return `<div class="figure fig-chick"><div class="f-body"></div><span class="f-wing l"></span><span class="f-wing r"></span><span class="f-beak"></span>${face}</div>`;
+    case "bunny": return `<div class="figure fig-bunny"><div class="f-body"></div><span class="f-ear l"><i></i></span><span class="f-ear r"><i></i></span>${face}</div>`;
+    case "cat": return `<div class="figure fig-cat"><div class="f-body"></div><span class="f-ear l"></span><span class="f-ear r"></span>${face}</div>`;
+    case "star": return `<div class="figure fig-star"><div class="f-body"></div>${face}</div>`;
+    case "cloud": return `<div class="figure fig-cloud"><span class="f-puff l"></span><span class="f-puff r"></span><div class="f-body"></div>${face}</div>`;
+    case "butterfly": return `<div class="figure fig-butterfly"><span class="f-wing tl"></span><span class="f-wing tr"></span><span class="f-wing bl"></span><span class="f-wing br"></span><div class="f-body"></div>${face}</div>`;
     default: return "";
   }
 }
 function mascotInner(){
-  const eq = store.equippedAcc||{};
-  const accHtml = ACCESSORIES.filter(a=>eq[a.slot]===a.id).map(a=>accessoryPartHtml(a.id)).join("");
   return `<div class="m-leaf l"></div><div class="m-leaf r"></div>
-    ${accHtml}
     <div class="m-body">
       <div class="m-face"><span class="m-eye"></span><span class="m-eye"></span><span class="m-mouth"></span></div>
       <span class="m-cheek l"></span><span class="m-cheek r"></span>
@@ -796,18 +788,11 @@ function refreshHomeMascot(){
   const el=document.getElementById("homeMascot");
   if(el) el.innerHTML = mascotInner();
 }
-function bounceDressupMascot(){
-  const el = document.querySelector("#dressupPreview .mascot");
-  if(!el) return;
-  el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
-  setTimeout(()=>el.classList.remove("pop"), 420);
-}
-function goToDressup(){ renderDressupScreen(); show("dressup"); }
-function checkAccessoryUnlocks(){
+function checkFigureUnlocks(){
   const stars = starCount();
   const prev = store.lastCelebratedStars||0;
   if(stars<=prev) return;
-  const newly = ACCESSORIES.filter(a=>a.cost>prev && a.cost<=stars);
+  const newly = FIGURES.filter(a=>a.cost>prev && a.cost<=stars);
   store.lastCelebratedStars = stars;
   save();
   if(newly.length) showUnlockPopup(newly);
@@ -819,73 +804,73 @@ function showUnlockPopup(items){
   ov.innerHTML = `
     <div class="unlock-card">
       <div style="font-size:38px">🎉</div>
-      <h3>새 아이템을 모았어요!</h3>
-      <p class="sub">쑥쑥이를 꾸밀 수 있어요</p>
+      <h3>새 친구가 나타났어요!</h3>
+      <p class="sub">피규어 수집함에서 만나 보세요</p>
       <div class="unlock-items">
         ${items.map(a=>`
           <div class="unlock-item">
-            <div class="acc-preview">${accessoryPartHtml(a.id)}</div>
+            <div class="fig-preview">${figureHtml(a.id)}</div>
             <span class="name">${a.name}</span>
           </div>`).join("")}
       </div>
       <div class="row-btns">
         <button class="btn gray small" data-act="close">나중에</button>
-        <button class="btn pink small" data-act="go">지금 꾸미기</button>
+        <button class="btn pink small" data-act="go">지금 구경하기</button>
       </div>
     </div>`;
   document.body.appendChild(ov);
   ov.querySelector('[data-act="close"]').onclick=()=>ov.remove();
-  ov.querySelector('[data-act="go"]').onclick=()=>{ ov.remove(); goToDressup(); };
+  ov.querySelector('[data-act="go"]').onclick=()=>{ ov.remove(); renderFiguresScreen(); show("figures"); };
   ov.addEventListener("click", e=>{ if(e.target===ov) ov.remove(); });
 }
-function renderDressupScreen(){
+function showFigureDetail(a){
+  const ov=document.createElement("div");
+  ov.className="unlock-overlay";
+  ov.innerHTML = `
+    <div class="unlock-card">
+      <div class="fig-preview pop" style="width:96px; height:96px; margin:0 auto 10px">${figureHtml(a.id)}</div>
+      <h3>${a.name}</h3>
+      <p class="sub">${a.blurb}</p>
+      <div class="row-btns">
+        <button class="btn pink small" data-act="close">좋아요!</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  beep(740, .1);
+  ov.querySelector('[data-act="close"]').onclick=()=>ov.remove();
+  ov.addEventListener("click", e=>{ if(e.target===ov) ov.remove(); });
+}
+function renderFiguresScreen(){
   const stars = starCount();
-  const eq = store.equippedAcc||{};
-  document.getElementById("dressupPreview").innerHTML = `<div class="mascot lg" style="margin:0 auto">${mascotInner()}</div>`;
-  const unlockedCount = ACCESSORIES.filter(a=>stars>=a.cost).length;
-  const nextLocked = ACCESSORIES.filter(a=>stars<a.cost).sort((a,b)=>a.cost-b.cost)[0];
+  const unlockedCount = FIGURES.filter(a=>stars>=a.cost).length;
+  const nextLocked = FIGURES.filter(a=>stars<a.cost).sort((a,b)=>a.cost-b.cost)[0];
   const gaugeHtml = nextLocked
-    ? `<div class="acc-gauge"><div class="acc-gauge-fill" style="width:${Math.min(100, stars/nextLocked.cost*100)}%"></div></div>
-       <div class="acc-next-hint">⭐${nextLocked.cost-stars}개만 더 모으면 "${nextLocked.name}" 열려요!</div>`
-    : `<div class="acc-next-hint">🎉 아이템을 모두 모았어요!</div>`;
-  document.getElementById("dressupProgress").innerHTML =
-    `${unlockedCount}/${ACCESSORIES.length}개 모았어요! (⭐${stars})${gaugeHtml}`;
-  const grid = document.getElementById("dressupGrid");
+    ? `<div class="fig-gauge"><div class="fig-gauge-fill" style="width:${Math.min(100, stars/nextLocked.cost*100)}%"></div></div>
+       <div class="fig-next-hint">⭐${nextLocked.cost-stars}개만 더 모으면 "${nextLocked.name}" 친구가 나타나요!</div>`
+    : `<div class="fig-next-hint">🎉 친구를 모두 모았어요!</div>`;
+  document.getElementById("figuresProgress").innerHTML =
+    `${unlockedCount}/${FIGURES.length}개 모았어요! (⭐${stars})${gaugeHtml}`;
+  const grid = document.getElementById("figuresGrid");
   grid.innerHTML = "";
-  const seenNow = new Set(store.accSeen||[]);
-  ACCESSORIES.forEach(a=>{
+  const seenNow = new Set(store.figuresSeen||[]);
+  FIGURES.forEach(a=>{
     const unlocked = stars>=a.cost;
-    const equipped = eq[a.slot]===a.id;
     const isNew = unlocked && !seenNow.has(a.id);
     const btn=document.createElement("button");
-    btn.className="acc-item"+(equipped?" equipped":"")+(unlocked?"":" locked");
+    btn.className="fig-item"+(unlocked?" got":" locked");
     btn.innerHTML = unlocked
-      ? `${isNew?'<span class="acc-new">NEW</span>':""}<div class="acc-preview">${accessoryPartHtml(a.id)}</div><span class="acc-name">${a.name}</span>${equipped?'<span class="acc-check">✓</span>':""}`
-      : `<div class="acc-preview locked-dim">${accessoryPartHtml(a.id)}</div><span class="acc-name">🔒 ⭐${a.cost}</span>`;
+      ? `${isNew?'<span class="fig-new">NEW</span>':""}<div class="fig-preview">${figureHtml(a.id)}</div><span class="fig-name">${a.name}</span>`
+      : `<div class="fig-preview locked-dim">${figureHtml(a.id)}</div><span class="fig-name">🔒 ⭐${a.cost}</span>`;
     if(unlocked){
-      btn.onclick=()=>{
-        if(!store.equippedAcc) store.equippedAcc={};
-        store.equippedAcc[a.slot] = equipped ? null : a.id;
-        save();
-        renderDressupScreen();
-        refreshHomeMascot();
-        bounceDressupMascot();
-        beep(equipped?440:740, .1);
-      };
+      btn.onclick=()=>{ showFigureDetail(a); };
     }
     grid.appendChild(btn);
   });
-  if(!store.accSeen) store.accSeen=[];
+  if(!store.figuresSeen) store.figuresSeen=[];
   let seenChanged=false;
-  ACCESSORIES.forEach(a=>{ if(stars>=a.cost && !store.accSeen.includes(a.id)){ store.accSeen.push(a.id); seenChanged=true; } });
+  FIGURES.forEach(a=>{ if(stars>=a.cost && !store.figuresSeen.includes(a.id)){ store.figuresSeen.push(a.id); seenChanged=true; } });
   if(seenChanged) save();
 }
-document.getElementById("btnDressupReset").onclick=()=>{
-  store.equippedAcc = {};
-  save();
-  renderDressupScreen();
-  refreshHomeMascot();
-};
 
 function refreshBadges(){
   const traced = new Set(Object.keys(store.trace).map(k=>k.slice(1).toUpperCase())).size;
@@ -894,11 +879,11 @@ function refreshBadges(){
   document.getElementById("badgeGame").textContent = store.gameBestMoves>0?("최소 "+store.gameBestMoves+"번"):"기록 없음";
   document.getElementById("badgeBlend").textContent = Object.keys(store.blendDone).length+"단어";
   document.getElementById("badgeChunk").textContent = Object.keys(store.chunkDone).length+"단어";
-  document.getElementById("badgeDress").textContent = ACCESSORIES.filter(a=>starCount()>=a.cost).length+"/"+ACCESSORIES.length+"개";
+  document.getElementById("badgeFigures").textContent = FIGURES.filter(a=>starCount()>=a.cost).length+"/"+FIGURES.length+"개";
   document.getElementById("starTotal").textContent = starCount();
-  checkAccessoryUnlocks();
-  const dressNew = ACCESSORIES.some(a=>starCount()>=a.cost && !(store.accSeen||[]).includes(a.id));
-  document.getElementById("dressNewDot").hidden = !dressNew;
+  checkFigureUnlocks();
+  const figNew = FIGURES.some(a=>starCount()>=a.cost && !(store.figuresSeen||[]).includes(a.id));
+  document.getElementById("figNewDot").hidden = !figNew;
   renderWeekStamp();
   refreshHomeMascot();
 }
